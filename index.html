@@ -3,15 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💰 Trading Casino - Dinero Ficticio</title>
+    <title>💰 Elite Trading Casino - Dinero Ficticio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow-x: hidden; }
-        .animate-spin { animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #60a5fa, #a78bfa, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-glow {
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.1), inset 0 0 20px rgba(96, 165, 250, 0.05);
+        }
+        .btn-premium {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+        .flip-card {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-left: 3px solid #3b82f6;
+        }
+        @keyframes money-rain {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(400px) rotate(360deg); opacity: 0; }
+        }
+        .money-rain {
+            animation: money-rain 3s ease-in forwards;
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body>
     <div id="app"></div>
     <script>
         const DB = {
@@ -25,114 +87,217 @@
 
         let user = DB.getUser();
         let page = 'login';
+        let gameResult = null;
 
         const Prices = {
-            BTC: () => 67000 + (Math.random()-0.5)*5000,
-            ETH: () => 3500 + (Math.random()-0.5)*500,
-            GOLD: () => 2400 + (Math.random()-0.5)*100,
-            APPLE: () => 230 + (Math.random()-0.5)*20,
-            TESLA: () => 250 + (Math.random()-0.5)*30,
-            SHIBA: () => 0.000015 + (Math.random()-0.5)*0.000005
+            BTC: () => 67000 + (Math.random()-0.5)*10000,
+            ETH: () => 3500 + (Math.random()-0.5)*800,
+            GOLD: () => 2400 + (Math.random()-0.5)*200,
+            APPLE: () => 230 + (Math.random()-0.5)*50,
+            TESLA: () => 250 + (Math.random()-0.5)*60,
+            NVIDIA: () => 1200 + (Math.random()-0.5)*400,
+            META: () => 500 + (Math.random()-0.5)*150,
+            AMAZON: () => 190 + (Math.random()-0.5)*40
         };
 
         const Luxury = [
-            {id: 'lambo', name: 'Lamborghini', price: 50000, emoji: '🏎️'},
-            {id: 'ferrari', name: 'Ferrari', price: 80000, emoji: '🏎️'},
-            {id: 'bugatti', name: 'Bugatti', price: 150000, emoji: '🏎️'},
-            {id: 'rolex', name: 'Rolex', price: 15000, emoji: '⌚'},
-            {id: 'richard', name: 'Richard Mille', price: 100000, emoji: '⌚'},
-            {id: 'patek', name: 'Patek Philippe', price: 50000, emoji: '⌚'},
-            {id: 'yacht', name: 'Yacht', price: 500000, emoji: '⛵'},
-            {id: 'villa', name: 'Villa Maldivas', price: 300000, emoji: '🏠'},
-            {id: 'penthouse', name: 'Penthouse', price: 200000, emoji: '🏢'}
+            // AUTOS
+            {id: 'lamborghini', name: 'Lamborghini Revuelto', price: 75000, emoji: '🏎️', category: 'autos', desc: 'Híbrido deportivo de lujo'},
+            {id: 'ferrari', name: 'Ferrari SF90', price: 95000, emoji: '🏎️', category: 'autos', desc: 'Superdeportivo híbrido'},
+            {id: 'bugatti', name: 'Bugatti Chiron', price: 280000, emoji: '🏎️', category: 'autos', desc: 'El auto más rápido del mundo'},
+            {id: 'porsche', name: 'Porsche 911 Turbo', price: 120000, emoji: '🏎️', category: 'autos', desc: 'Clásico deportivo alemán'},
+            {id: 'tesla', name: 'Tesla Roadster', price: 200000, emoji: '⚡', category: 'autos', desc: 'Auto eléctrico futurista'},
+
+            // RELOJES
+            {id: 'rolex', name: 'Rolex Submariner', price: 18000, emoji: '⌚', category: 'relojes', desc: 'Reloj de lujo clásico'},
+            {id: 'patek', name: 'Patek Philippe Nautilus', price: 150000, emoji: '⌚', category: 'relojes', desc: 'El reloj más caro del mundo'},
+            {id: 'richard', name: 'Richard Mille RM56', price: 500000, emoji: '⌚', category: 'relojes', desc: 'Reloj de titanio y zafiro'},
+            {id: 'omega', name: 'Omega Seamaster', price: 12000, emoji: '⌚', category: 'relojes', desc: 'Reloj de buzo profesional'},
+            {id: 'cartier', name: 'Cartier Santos', price: 50000, emoji: '⌚', category: 'relojes', desc: 'Reloj de oro blanco'},
+
+            // INMUEBLES
+            {id: 'penthouse', name: 'Penthouse Manhattan', price: 450000, emoji: '🏢', category: 'inmuebles', desc: '5 pisos en el cielo de NYC'},
+            {id: 'villa', name: 'Villa Maldivas', price: 350000, emoji: '🏝️', category: 'inmuebles', desc: 'Casa en la playa paradisíaca'},
+            {id: 'castillo', name: 'Castillo Escocés', price: 600000, emoji: '🏰', category: 'inmuebles', desc: 'Castillo medieval restaurado'},
+            {id: 'mansion', name: 'Mansión Beverly Hills', price: 500000, emoji: '🏛️', category: 'inmuebles', desc: 'Mansión de 50 habitaciones'},
+            {id: 'chalet', name: 'Chalet Suiza', price: 200000, emoji: '⛷️', category: 'inmuebles', desc: 'Chalet alpino de lujo'},
+
+            // TRANSPORTES
+            {id: 'yacht', name: 'Yacht Privado', price: 800000, emoji: '⛵', category: 'transportes', desc: 'Yate de 200 metros'},
+            {id: 'helicopter', name: 'Helicóptero Privado', price: 300000, emoji: '🚁', category: 'transportes', desc: 'Helicóptero ultraluxe'},
+            {id: 'jet', name: 'Jet Privado Airbus', price: 1200000, emoji: '✈️', category: 'transportes', desc: 'Jet de lujo intercontinental'},
+            {id: 'submarine', name: 'Submarino Privado', price: 500000, emoji: '🛸', category: 'transportes', desc: 'Sumergible de exploración'},
+
+            // JOYAS
+            {id: 'diamond', name: 'Anillo Diamante 100ct', price: 500000, emoji: '💎', category: 'joyas', desc: 'Diamante certificado VVS1'},
+            {id: 'crown', name: 'Corona de Oro y Rubíes', price: 400000, emoji: '👑', category: 'joyas', desc: 'Joya real de colección'},
+            {id: 'necklace', name: 'Collar de Perlas Raras', price: 250000, emoji: '📿', category: 'joyas', desc: '20 perlas negras de Tahiti'},
+
+            // EXPERIENCIAS
+            {id: 'safari', name: 'Safari Privado África', price: 100000, emoji: '🦁', category: 'experiencias', desc: 'Semana de safari exclusivo'},
+            {id: 'cosmonauta', name: 'Vuelo Espacial', price: 300000, emoji: '🚀', category: 'experiencias', desc: 'Viaje a la órbita terrestre'},
+            {id: 'chef', name: 'Chef Privado Michelin', price: 50000, emoji: '👨‍🍳', category: 'experiencias', desc: 'Chef 3 estrellas en tu casa'},
+            {id: 'concert', name: 'Concierto Privado', price: 200000, emoji: '🎤', category: 'experiencias', desc: 'Tu artista favorito en vivo'},
+
+            // TECH
+            {id: 'gold-iphone', name: 'iPhone 15 Oro 24k', price: 45000, emoji: '📱', category: 'tech', desc: 'iPhone bañado en oro puro'},
+            {id: 'custom-pc', name: 'PC Gaming Personalizado', price: 80000, emoji: '🖥️', category: 'tech', desc: 'Setup gaming ultraprofesional'},
+            {id: 'robot', name: 'Robot Humanoides', price: 120000, emoji: '🤖', category: 'tech', desc: 'Robot asistente de IA'}
         ];
 
         function login() {
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             if (!username) return alert('Nombre requerido');
-            user = {id: Date.now(), username, balance: 10000, luxuryItems: [], createdAt: new Date()};
+            user = {id: Date.now(), username, balance: 50000, luxuryItems: [], createdAt: new Date(), totalWon: 0, totalLost: 0};
             DB.setUser(user);
             page = 'dashboard';
             render();
         }
 
         function buyAsset() {
-            const asset = document.getElementById('asset').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            if (!asset || !amount) return alert('Datos requeridos');
+            const asset = document.getElementById('trading-asset').value;
+            const amountStr = document.getElementById('trading-amount').value.trim();
+
+            if (!asset) return alert('Selecciona un activo');
+            if (!amountStr || isNaN(parseFloat(amountStr))) return alert('Cantidad válida requerida');
+
+            const amount = Math.abs(parseFloat(amountStr));
+            if (amount <= 0) return alert('La cantidad debe ser mayor a 0');
 
             const price = Prices[asset]();
             const cost = price * amount;
-            if (user.balance < cost) return alert('Saldo insuficiente');
+
+            if (user.balance < cost) {
+                return alert(`Saldo insuficiente\nNecesitas: $${cost.toFixed(2)}\nTienes: $${user.balance.toFixed(2)}`);
+            }
 
             user.balance -= cost;
             const trades = DB.getTrades(user.id);
-            trades.push({id: Date.now(), type: 'BUY', asset, amount, price, cost, profit: 0});
+            trades.push({id: Date.now(), type: 'BUY', asset, amount, price, cost, profit: 0, date: new Date()});
             DB.setTrades(user.id, trades);
             DB.setUser(user);
-            alert(`✅ Comprado ${amount} ${asset} por $${cost.toFixed(2)}`);
-            document.getElementById('asset').value = '';
-            document.getElementById('amount').value = '';
-            render();
+
+            gameResult = {type: 'trade', success: true, msg: `✅ Comprado ${amount} ${asset} por $${cost.toFixed(2)}`};
+            document.getElementById('trading-asset').value = '';
+            document.getElementById('trading-amount').value = '';
+            setTimeout(() => render(), 500);
         }
 
         function playRoulette() {
-            const bet = parseFloat(document.getElementById('rouletteBet').value);
-            if (!bet || user.balance < bet) return alert('Apuesta válida requerida');
+            const betStr = document.getElementById('roulette-bet').value.trim();
+            if (!betStr || isNaN(parseFloat(betStr))) return alert('Apuesta válida requerida');
 
-            const won = Math.random() > 0.5;
-            user.balance += won ? bet : -bet;
+            const bet = Math.abs(parseFloat(betStr));
+            if (bet <= 0) return alert('La apuesta debe ser mayor a 0');
+            if (user.balance < bet) return alert('Saldo insuficiente');
+
+            const ballNumber = Math.floor(Math.random() * 37);
+            const won = Math.random() > 0.48; // 48% de ganar (favorable al casino)
+
+            if (won) {
+                user.balance += bet * 2;
+                user.totalWon = (user.totalWon || 0) + (bet * 2);
+                gameResult = {type: 'roulette', won: true, number: ballNumber, bet, payout: bet * 2};
+            } else {
+                user.balance -= bet;
+                user.totalLost = (user.totalLost || 0) + bet;
+                gameResult = {type: 'roulette', won: false, number: ballNumber, bet};
+            }
 
             const games = DB.getGames(user.id);
-            games.push({game: 'ROULETTE', bet, result: won ? 'WIN' : 'LOSS'});
+            games.push({game: 'ROULETTE', bet, result: won ? 'WIN' : 'LOSS', number: ballNumber, date: new Date()});
             DB.setGames(user.id, games);
             DB.setUser(user);
 
-            alert(won ? `🎉 ¡GANASTE! +$${bet}` : `😢 Perdiste -$${bet}`);
-            document.getElementById('rouletteBet').value = '';
-            render();
+            document.getElementById('roulette-bet').value = '';
+            setTimeout(() => render(), 500);
         }
 
         function playBlackjack() {
-            const bet = parseFloat(document.getElementById('blackjackBet').value);
-            if (!bet || user.balance < bet) return alert('Apuesta válida');
+            const betStr = document.getElementById('blackjack-bet').value.trim();
+            if (!betStr || isNaN(parseFloat(betStr))) return alert('Apuesta válida requerida');
 
-            const won = Math.random() > 0.5;
-            user.balance += won ? bet * 1.5 : -bet;
+            const bet = Math.abs(parseFloat(betStr));
+            if (bet <= 0) return alert('La apuesta debe ser mayor a 0');
+            if (user.balance < bet) return alert('Saldo insuficiente');
+
+            const playerCards = [Math.floor(Math.random() * 11) + 5, Math.floor(Math.random() * 11) + 5];
+            const dealerCards = [Math.floor(Math.random() * 11) + 5, Math.floor(Math.random() * 11) + 5];
+
+            const playerTotal = Math.min(playerCards.reduce((a, b) => a + b), 21);
+            const dealerTotal = Math.min(dealerCards.reduce((a, b) => a + b), 21);
+
+            const won = playerTotal > dealerTotal || (playerTotal === 21 && playerCards.length === 2);
+
+            if (won) {
+                user.balance += bet * 1.5;
+                user.totalWon = (user.totalWon || 0) + (bet * 1.5);
+                gameResult = {type: 'blackjack', won: true, playerCards, dealerCards, playerTotal, dealerTotal, bet, payout: bet * 1.5};
+            } else {
+                user.balance -= bet;
+                user.totalLost = (user.totalLost || 0) + bet;
+                gameResult = {type: 'blackjack', won: false, playerCards, dealerCards, playerTotal, dealerTotal, bet};
+            }
 
             const games = DB.getGames(user.id);
-            games.push({game: 'BLACKJACK', bet, result: won ? 'WIN' : 'LOSS'});
+            games.push({game: 'BLACKJACK', bet, result: won ? 'WIN' : 'LOSS', playerTotal, dealerTotal, date: new Date()});
             DB.setGames(user.id, games);
             DB.setUser(user);
 
-            alert(won ? `🎉 ¡GANASTE! +$${(bet*1.5).toFixed(2)}` : `😢 Perdiste -$${bet}`);
-            document.getElementById('blackjackBet').value = '';
-            render();
+            document.getElementById('blackjack-bet').value = '';
+            setTimeout(() => render(), 500);
         }
 
-        function playCoinflip() {
-            const bet = parseFloat(document.getElementById('coinBet').value);
-            if (!bet || user.balance < bet) return alert('Apuesta válida');
+        function playCoinFlip() {
+            const betStr = document.getElementById('coinflip-bet').value.trim();
+            if (!betStr || isNaN(parseFloat(betStr))) return alert('Apuesta válida requerida');
 
-            const won = Math.random() > 0.5;
-            user.balance += won ? bet : -bet;
+            const bet = Math.abs(parseFloat(betStr));
+            if (bet <= 0) return alert('La apuesta debe ser mayor a 0');
+            if (user.balance < bet) return alert('Saldo insuficiente');
+
+            const result = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
+            const won = Math.random() > 0.48;
+
+            if (won) {
+                user.balance += bet;
+                user.totalWon = (user.totalWon || 0) + bet;
+                gameResult = {type: 'coinflip', won: true, result, bet, payout: bet};
+            } else {
+                user.balance -= bet;
+                user.totalLost = (user.totalLost || 0) + bet;
+                gameResult = {type: 'coinflip', won: false, result, bet};
+            }
 
             const games = DB.getGames(user.id);
-            games.push({game: 'COINFLIP', bet, result: won ? 'WIN' : 'LOSS'});
+            games.push({game: 'COINFLIP', bet, result: won ? 'WIN' : 'LOSS', flip: result, date: new Date()});
             DB.setGames(user.id, games);
             DB.setUser(user);
 
-            alert(won ? `🎉 ${won ? 'HEADS' : 'TAILS'}! +$${bet}` : `😢 ${won ? 'HEADS' : 'TAILS'}... -$${bet}`);
-            document.getElementById('coinBet').value = '';
-            render();
+            document.getElementById('coinflip-bet').value = '';
+            setTimeout(() => render(), 500);
         }
 
-        function buyLuxury(itemId, price, name) {
-            if (user.balance < price) return alert('Saldo insuficiente');
-            user.balance -= price;
-            user.luxuryItems.push({itemId, name, price});
+        function buyLuxury(itemId) {
+            const item = Luxury.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (user.balance < item.price) {
+                return alert(`Saldo insuficiente\nNecesitas: $${item.price.toFixed(2)}\nTienes: $${user.balance.toFixed(2)}`);
+            }
+
+            user.balance -= item.price;
+            user.luxuryItems.push({...item, boughtAt: new Date()});
             DB.setUser(user);
-            alert(`🏎️ ¡Compraste ${name}! Saldo: $${user.balance.toFixed(2)}`);
+            gameResult = {type: 'luxury', success: true, item: item.name};
+            setTimeout(() => render(), 500);
+        }
+
+        function logout() {
+            localStorage.clear();
+            user = null;
+            page = 'login';
+            gameResult = null;
             render();
         }
 
@@ -141,95 +306,291 @@
 
             if (!user) {
                 app.innerHTML = `
-                    <div class="min-h-screen bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center p-4">
-                        <div class="bg-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl">
-                            <h1 class="text-4xl font-bold text-center mb-2">💰 Trading Casino</h1>
-                            <p class="text-gray-400 text-center mb-6">Dinero Ficticio - Competencia Real</p>
-                            <input type="text" id="username" placeholder="Tu nombre" class="w-full px-4 py-3 bg-gray-700 rounded-lg mb-4 text-white placeholder-gray-400">
-                            <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-bold">Entrar</button>
+                    <div class="min-h-screen flex items-center justify-center p-4">
+                        <div class="w-full max-w-md">
+                            <div class="card-glow rounded-2xl p-8 backdrop-blur-xl">
+                                <h1 class="text-5xl font-bold gradient-text text-center mb-2">💰</h1>
+                                <h2 class="text-4xl font-bold text-center mb-2 text-white">Elite Trading</h2>
+                                <p class="text-center text-blue-300 mb-8">Casino & Inversiones de Lujo</p>
+
+                                <div class="space-y-4">
+                                    <input type="text" id="username" placeholder="Tu nombre de trader"
+                                           class="w-full px-4 py-3 bg-slate-800 border border-blue-500 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <button onclick="login()" class="w-full btn-premium py-3 rounded-lg text-white">
+                                        Entrar al Casino
+                                    </button>
+                                </div>
+
+                                <p class="text-center text-slate-400 text-xs mt-6">💵 Comienza con $50,000 en dinero ficticio</p>
+                            </div>
                         </div>
                     </div>
                 `;
                 return;
             }
 
+            const stats = `
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="stat-card rounded-lg p-3">
+                        <p class="text-xs text-blue-400">Saldo</p>
+                        <p class="text-lg font-bold text-white">$${user.balance.toFixed(0)}</p>
+                    </div>
+                    <div class="stat-card rounded-lg p-3">
+                        <p class="text-xs text-green-400">Ganado</p>
+                        <p class="text-lg font-bold text-green-400">$${(user.totalWon || 0).toFixed(0)}</p>
+                    </div>
+                    <div class="stat-card rounded-lg p-3">
+                        <p class="text-xs text-red-400">Perdido</p>
+                        <p class="text-lg font-bold text-red-400">$${(user.totalLost || 0).toFixed(0)}</p>
+                    </div>
+                </div>
+            `;
+
             const pages = {
+                login: '',
                 dashboard: `
-                    <div class="min-h-screen bg-gray-900 p-4">
-                        <div class="max-w-4xl mx-auto">
-                            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 mb-6">
-                                <h1 class="text-3xl font-bold">¡Hola ${user.username}! 👋</h1>
-                                <p class="text-xl mt-2">💰 Saldo: $${user.balance.toFixed(2)}</p>
-                                <p class="text-sm mt-1">Lujos: ${user.luxuryItems.length}</p>
+                    <div class="min-h-screen p-4">
+                        <div class="max-w-6xl mx-auto">
+                            <div class="flex justify-between items-center mb-6">
+                                <h1 class="text-3xl font-bold gradient-text">¡Hola ${user.username}! 🎰</h1>
+                                <button onclick="logout()" class="px-4 py-2 bg-red-600 rounded-lg text-sm font-bold hover:bg-red-700">
+                                    Salir
+                                </button>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <button onclick="page='trading'; render()" class="bg-green-600 hover:bg-green-700 p-6 rounded-lg font-bold text-lg">📈 Trading</button>
-                                <button onclick="page='casino'; render()" class="bg-red-600 hover:bg-red-700 p-6 rounded-lg font-bold text-lg">🎰 Casino</button>
-                                <button onclick="page='luxury'; render()" class="bg-yellow-600 hover:bg-yellow-700 p-6 rounded-lg font-bold text-lg">🏎️ Lujos</button>
+
+                            ${stats}
+
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
+                                <button onclick="page='trading'; render()" class="card-glow btn-premium py-4 rounded-lg text-white font-bold">
+                                    📈 Trading
+                                </button>
+                                <button onclick="page='casino'; render()" class="card-glow btn-premium py-4 rounded-lg text-white font-bold">
+                                    🎰 Casino
+                                </button>
+                                <button onclick="page='luxury'; render()" class="card-glow btn-premium py-4 rounded-lg text-white font-bold">
+                                    💎 Tienda
+                                </button>
+                                <button onclick="page='stats'; render()" class="card-glow btn-premium py-4 rounded-lg text-white font-bold">
+                                    📊 Estadísticas
+                                </button>
+                            </div>
+
+                            <div class="card-glow rounded-lg p-6 backdrop-blur-xl">
+                                <h3 class="text-xl font-bold mb-4 text-blue-300">Mis Posesiones (${user.luxuryItems.length})</h3>
+                                ${user.luxuryItems.length === 0 ?
+                                    '<p class="text-slate-400">Sin posesiones aún. ¡Gana dinero y compra lujo!</p>' :
+                                    `<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                        ${user.luxuryItems.map(i => `<div class="bg-slate-800 rounded p-2 text-center text-sm">${i.emoji} ${i.name}</div>`).join('')}
+                                    </div>`
+                                }
                             </div>
                         </div>
                     </div>
                 `,
                 trading: `
-                    <div class="min-h-screen bg-gray-900 p-4">
-                        <div class="max-w-2xl mx-auto">
-                            <button onclick="page='dashboard'; render()" class="mb-4 bg-gray-700 px-4 py-2 rounded">← Atrás</button>
-                            <div class="bg-gray-800 rounded-lg p-6">
-                                <h2 class="text-2xl font-bold mb-4">📈 Trading</h2>
-                                <select id="asset" class="w-full px-4 py-2 bg-gray-700 rounded mb-4 text-white">
-                                    <option value="">Elige activo</option>
-                                    <option value="BTC">Bitcoin</option>
-                                    <option value="ETH">Ethereum</option>
-                                    <option value="GOLD">Oro</option>
-                                    <option value="APPLE">Apple</option>
-                                    <option value="TESLA">Tesla</option>
-                                </select>
-                                <input type="number" id="amount" placeholder="Cantidad" class="w-full px-4 py-2 bg-gray-700 rounded mb-4 text-white placeholder-gray-400" step="0.01">
-                                <button onclick="buyAsset()" class="w-full bg-green-600 hover:bg-green-700 py-2 rounded font-bold">Comprar</button>
+                    <div class="min-h-screen p-4">
+                        <div class="max-w-4xl mx-auto">
+                            <button onclick="page='dashboard'; render()" class="mb-4 px-4 py-2 bg-slate-800 rounded-lg text-sm">← Atrás</button>
+
+                            ${stats}
+
+                            <div class="card-glow rounded-lg p-6 backdrop-blur-xl mb-6">
+                                <h2 class="text-2xl font-bold mb-4 gradient-text">📈 Mercados de Trading</h2>
+
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="text-sm text-blue-300 mb-2 block">Selecciona Activo</label>
+                                        <select id="trading-asset" class="w-full px-4 py-2 bg-slate-800 border border-blue-500 rounded-lg text-white">
+                                            <option value="">-- Elige activo --</option>
+                                            <option value="BTC">₿ Bitcoin</option>
+                                            <option value="ETH">Ξ Ethereum</option>
+                                            <option value="NVIDIA">NVDA Nvidia</option>
+                                            <option value="TESLA">TSLA Tesla</option>
+                                            <option value="META">META Meta</option>
+                                            <option value="AMAZON">AMZN Amazon</option>
+                                            <option value="APPLE">AAPL Apple</option>
+                                            <option value="GOLD">🟡 Oro</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="text-sm text-blue-300 mb-2 block">Cantidad a Invertir</label>
+                                        <input type="number" id="trading-amount" placeholder="Ej: 2.5" step="0.001" min="0"
+                                               class="w-full px-4 py-2 bg-slate-800 border border-blue-500 rounded-lg text-white placeholder-slate-400">
+                                    </div>
+
+                                    <button onclick="buyAsset()" class="w-full btn-premium py-3 rounded-lg text-white font-bold">
+                                        Comprar Activo
+                                    </button>
+                                </div>
                             </div>
+
+                            ${gameResult && gameResult.type === 'trade' ?
+                                `<div class="card-glow rounded-lg p-4 backdrop-blur-xl mb-6 bg-green-900/20 border-green-500">
+                                    <p class="text-center text-lg font-bold text-green-400">${gameResult.msg}</p>
+                                </div>` : ''}
                         </div>
                     </div>
                 `,
                 casino: `
-                    <div class="min-h-screen bg-gray-900 p-4">
-                        <div class="max-w-2xl mx-auto">
-                            <button onclick="page='dashboard'; render()" class="mb-4 bg-gray-700 px-4 py-2 rounded">← Atrás</button>
-                            <h2 class="text-2xl font-bold mb-4">🎰 Casino</h2>
-                            <div class="bg-gray-800 rounded-lg p-4 mb-4">
-                                <h3 class="font-bold mb-2">🎡 Ruleta</h3>
-                                <input type="number" id="rouletteBet" placeholder="Apuesta" class="w-full px-4 py-2 bg-gray-700 rounded mb-2 text-white placeholder-gray-400">
-                                <button onclick="playRoulette()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded font-bold">Girar</button>
+                    <div class="min-h-screen p-4">
+                        <div class="max-w-4xl mx-auto">
+                            <button onclick="page='dashboard'; render()" class="mb-4 px-4 py-2 bg-slate-800 rounded-lg text-sm">← Atrás</button>
+
+                            ${stats}
+
+                            <h2 class="text-3xl font-bold mb-6 gradient-text">🎰 Casino Elite</h2>
+
+                            <!-- RULETA -->
+                            <div class="card-glow rounded-lg p-6 backdrop-blur-xl mb-6">
+                                <h3 class="text-xl font-bold mb-4 text-amber-400">🎡 Ruleta Europea</h3>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm text-slate-400 mb-2">Apuesta (50% ganar)</p>
+                                        <input type="number" id="roulette-bet" placeholder="Cantidad" min="1"
+                                               class="w-full px-3 py-2 bg-slate-800 border border-amber-500 rounded-lg text-white">
+                                    </div>
+                                    <button onclick="playRoulette()" class="btn-premium py-2 rounded-lg text-white font-bold">Girar</button>
+                                </div>
+                                ${gameResult && gameResult.type === 'roulette' ?
+                                    `<div class="mt-4 p-3 rounded-lg ${gameResult.won ? 'bg-green-900/30 border border-green-500' : 'bg-red-900/30 border border-red-500'}">
+                                        <p class="text-center text-sm"><strong>Número: ${gameResult.number}</strong></p>
+                                        <p class="text-center font-bold text-lg ${gameResult.won ? 'text-green-400' : 'text-red-400'}">
+                                            ${gameResult.won ? '🎉 ¡GANASTE!' : '😢 Perdiste'}
+                                        </p>
+                                        ${gameResult.won ? `<p class="text-center text-green-400">+$${gameResult.payout.toFixed(2)}</p>` : ''}
+                                    </div>` : ''}
                             </div>
-                            <div class="bg-gray-800 rounded-lg p-4 mb-4">
-                                <h3 class="font-bold mb-2">🃏 Blackjack</h3>
-                                <input type="number" id="blackjackBet" placeholder="Apuesta" class="w-full px-4 py-2 bg-gray-700 rounded mb-2 text-white placeholder-gray-400">
-                                <button onclick="playBlackjack()" class="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded font-bold">Jugar</button>
+
+                            <!-- BLACKJACK -->
+                            <div class="card-glow rounded-lg p-6 backdrop-blur-xl mb-6">
+                                <h3 class="text-xl font-bold mb-4 text-red-400">🃏 Blackjack</h3>
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <p class="text-sm text-slate-400 mb-2">Apuesta (x1.5 si ganas)</p>
+                                        <input type="number" id="blackjack-bet" placeholder="Cantidad" min="1"
+                                               class="w-full px-3 py-2 bg-slate-800 border border-red-500 rounded-lg text-white">
+                                    </div>
+                                    <button onclick="playBlackjack()" class="btn-premium py-2 rounded-lg text-white font-bold">Jugar</button>
+                                </div>
+                                ${gameResult && gameResult.type === 'blackjack' ?
+                                    `<div class="p-3 rounded-lg ${gameResult.won ? 'bg-green-900/30 border border-green-500' : 'bg-red-900/30 border border-red-500'}">
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <p class="text-xs text-slate-400">Tu mano: ${gameResult.playerCards.join(', ')}</p>
+                                                <p class="text-sm font-bold text-blue-300">Total: ${gameResult.playerTotal}</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-slate-400">Dealer: ${gameResult.dealerCards.join(', ')}</p>
+                                                <p class="text-sm font-bold text-orange-300">Total: ${gameResult.dealerTotal}</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-center font-bold text-lg mt-2 ${gameResult.won ? 'text-green-400' : 'text-red-400'}">
+                                            ${gameResult.won ? '🎉 ¡GANASTE!' : '😢 Perdiste'}
+                                        </p>
+                                        ${gameResult.won ? `<p class="text-center text-green-400">+$${gameResult.payout.toFixed(2)}</p>` : ''}
+                                    </div>` : ''}
                             </div>
-                            <div class="bg-gray-800 rounded-lg p-4">
-                                <h3 class="font-bold mb-2">🪙 Coin Flip</h3>
-                                <input type="number" id="coinBet" placeholder="Apuesta" class="w-full px-4 py-2 bg-gray-700 rounded mb-2 text-white placeholder-gray-400">
-                                <button onclick="playCoinflip()" class="w-full bg-yellow-600 hover:bg-yellow-700 py-2 rounded font-bold">Lanzar</button>
+
+                            <!-- COIN FLIP -->
+                            <div class="card-glow rounded-lg p-6 backdrop-blur-xl">
+                                <h3 class="text-xl font-bold mb-4 text-purple-400">🪙 Coin Flip</h3>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm text-slate-400 mb-2">Apuesta (50/50)</p>
+                                        <input type="number" id="coinflip-bet" placeholder="Cantidad" min="1"
+                                               class="w-full px-3 py-2 bg-slate-800 border border-purple-500 rounded-lg text-white">
+                                    </div>
+                                    <button onclick="playCoinFlip()" class="btn-premium py-2 rounded-lg text-white font-bold">Lanzar</button>
+                                </div>
+                                ${gameResult && gameResult.type === 'coinflip' ?
+                                    `<div class="mt-4 p-3 rounded-lg ${gameResult.won ? 'bg-green-900/30 border border-green-500' : 'bg-red-900/30 border border-red-500'}">
+                                        <p class="text-center text-lg font-bold">${gameResult.result === 'HEADS' ? '🪙 HEADS' : '🪙 TAILS'}</p>
+                                        <p class="text-center font-bold text-lg mt-2 ${gameResult.won ? 'text-green-400' : 'text-red-400'}">
+                                            ${gameResult.won ? '🎉 ¡GANASTE!' : '😢 Perdiste'}
+                                        </p>
+                                        ${gameResult.won ? `<p class="text-center text-green-400">+$${gameResult.payout.toFixed(2)}</p>` : ''}
+                                    </div>` : ''}
                             </div>
                         </div>
                     </div>
                 `,
                 luxury: `
-                    <div class="min-h-screen bg-gray-900 p-4">
-                        <div class="max-w-4xl mx-auto">
-                            <button onclick="page='dashboard'; render()" class="mb-4 bg-gray-700 px-4 py-2 rounded">← Atrás</button>
-                            <h2 class="text-2xl font-bold mb-4">🏎️ Tienda de Lujos</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                ${Luxury.map(item => `
-                                    <div class="bg-gray-800 rounded-lg p-4">
-                                        <h3>${item.emoji} ${item.name}</h3>
-                                        <p class="text-yellow-400 font-bold">$${item.price.toLocaleString()}</p>
-                                        <button onclick="buyLuxury('${item.id}', ${item.price}, '${item.name}')" class="w-full bg-blue-600 hover:bg-blue-700 mt-2 py-1 rounded text-sm">Comprar</button>
+                    <div class="min-h-screen p-4">
+                        <div class="max-w-6xl mx-auto">
+                            <button onclick="page='dashboard'; render()" class="mb-4 px-4 py-2 bg-slate-800 rounded-lg text-sm">← Atrás</button>
+
+                            ${stats}
+
+                            <h2 class="text-3xl font-bold mb-6 gradient-text">💎 Tienda de Lujos</h2>
+
+                            ${['autos', 'relojes', 'inmuebles', 'transportes', 'joyas', 'experiencias', 'tech'].map(category => {
+                                const items = Luxury.filter(i => i.category === category);
+                                const categoryNames = {autos: '🏎️ Autos', relojes: '⌚ Relojes', inmuebles: '🏠 Inmuebles', transportes: '✈️ Transportes', joyas: '💎 Joyas', experiencias: '🎭 Experiencias', tech: '🖥️ Tecnología'};
+                                return `
+                                    <div class="mb-8">
+                                        <h3 class="text-2xl font-bold mb-4 gradient-text">${categoryNames[category]}</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                            ${items.map(item => `
+                                                <div class="card-glow rounded-lg p-4 backdrop-blur-xl">
+                                                    <p class="text-4xl mb-2">${item.emoji}</p>
+                                                    <h4 class="text-lg font-bold text-white mb-1">${item.name}</h4>
+                                                    <p class="text-xs text-slate-400 mb-3">${item.desc}</p>
+                                                    <p class="text-xl font-bold text-green-400 mb-3">$${item.price.toLocaleString()}</p>
+                                                    <button onclick="buyLuxury('${item.id}')" class="w-full btn-premium py-2 rounded-lg text-white text-sm font-bold">
+                                                        Comprar
+                                                    </button>
+                                                </div>
+                                            `).join('')}
+                                        </div>
                                     </div>
-                                `).join('')}
+                                `;
+                            }).join('')}
+
+                            ${gameResult && gameResult.type === 'luxury' ?
+                                `<div class="fixed top-4 right-4 card-glow bg-green-900/20 border-green-500 rounded-lg p-4 backdrop-blur-xl">
+                                    <p class="text-center text-green-400 font-bold">🎉 ¡Compraste ${gameResult.item}!</p>
+                                </div>` : ''}
+                        </div>
+                    </div>
+                `,
+                stats: `
+                    <div class="min-h-screen p-4">
+                        <div class="max-w-4xl mx-auto">
+                            <button onclick="page='dashboard'; render()" class="mb-4 px-4 py-2 bg-slate-800 rounded-lg text-sm">← Atrás</button>
+
+                            <h2 class="text-3xl font-bold mb-6 gradient-text">📊 Estadísticas</h2>
+
+                            <div class="card-glow rounded-lg p-6 backdrop-blur-xl mb-6">
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div>
+                                        <p class="text-sm text-slate-400">Saldo Actual</p>
+                                        <p class="text-2xl font-bold text-blue-400">$${user.balance.toFixed(0)}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-400">Total Ganado</p>
+                                        <p class="text-2xl font-bold text-green-400">$${(user.totalWon || 0).toFixed(0)}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-400">Total Perdido</p>
+                                        <p class="text-2xl font-bold text-red-400">$${(user.totalLost || 0).toFixed(0)}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-400">Net Resultado</p>
+                                        <p class="text-2xl font-bold ${(user.totalWon || 0) - (user.totalLost || 0) >= 0 ? 'text-green-400' : 'text-red-400'}">
+                                            $${((user.totalWon || 0) - (user.totalLost || 0)).toFixed(0)}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mt-6 bg-gray-800 rounded-lg p-4">
-                                <h3 class="font-bold mb-2">Tus Lujos:</h3>
-                                <p>${user.luxuryItems.length === 0 ? 'Sin lujos aún' : user.luxuryItems.map(i => `${Luxury.find(l => l.id === i.itemId)?.emoji} ${i.name}`).join(', ')}</p>
+
+                            <div class="card-glow rounded-lg p-6 backdrop-blur-xl">
+                                <h3 class="text-xl font-bold mb-4 text-blue-300">Información de Cuenta</h3>
+                                <div class="space-y-2 text-sm">
+                                    <p><span class="text-slate-400">Usuario:</span> <span class="text-white">${user.username}</span></p>
+                                    <p><span class="text-slate-400">Piezas de Lujo:</span> <span class="text-white">${user.luxuryItems.length}</span></p>
+                                    <p><span class="text-slate-400">Creado:</span> <span class="text-white">${new Date(user.createdAt).toLocaleDateString()}</span></p>
+                                </div>
                             </div>
                         </div>
                     </div>
