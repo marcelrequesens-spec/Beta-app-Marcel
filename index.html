@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Trading Pro - Professional Platform</title>
+    <title>Elite Trading Pro - Professional Investment Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.0/dist/apexcharts.min.js"></script>
     <style>
@@ -24,31 +24,56 @@
             background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1f35 100%);
             color: var(--text-primary);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
         }
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(100, 116, 139, 0.2); }
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3); }
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+        .btn-danger:hover { background: #dc2626; }
         .stat-box { background: linear-gradient(135deg, rgba(0, 102, 255, 0.1), rgba(99, 102, 241, 0.1)); border: 1px solid rgba(0, 102, 255, 0.3); border-radius: 12px; padding: 1.5rem; text-align: center; }
         .gradient-text { background: linear-gradient(135deg, #0066ff, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .achievement-badge { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); border-radius: 8px; padding: 1rem; text-align: center; transition: all 0.3s; }
-        .achievement-badge.unlocked { background: rgba(16, 185, 129, 0.2); border-color: #10b981; }
+        .achievement-badge { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 1rem; text-align: center; transition: all 0.3s; }
+        .achievement-badge.unlocked { background: rgba(16, 185, 129, 0.2); border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
         .achievement-badge:hover { transform: scale(1.05); }
-        .rank-gold { background: rgba(251, 191, 36, 0.2); border: 1px solid #fbbf24; color: #fbbf24; }
-        .rank-silver { background: rgba(148, 163, 184, 0.2); border: 1px solid #94a3b8; color: #94a3b8; }
+        .rank-badge { display: inline-block; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.875rem; }
         .rank-bronze { background: rgba(217, 119, 6, 0.2); border: 1px solid #d97706; color: #d97706; }
+        .rank-silver { background: rgba(148, 163, 184, 0.2); border: 1px solid #94a3b8; color: #94a3b8; }
+        .rank-gold { background: rgba(251, 191, 36, 0.2); border: 1px solid #fbbf24; color: #fbbf24; }
+        .rank-platinum { background: rgba(196, 181, 253, 0.2); border: 1px solid #c4b5fd; color: #c4b5fd; }
+        .rank-diamond { background: rgba(34, 211, 238, 0.2); border: 1px solid #22d3ee; color: #22d3ee; }
         .market-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; transition: all 0.3s; }
         .market-item:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .market-item.selected { border-color: var(--primary); background: rgba(0, 102, 255, 0.1); }
         .leaderboard-row { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
-        .leaderboard-row:first-child { background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.05)); }
-        .chart-container { height: 300px; }
+        .leaderboard-row:first-child { background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.05)); border-left: 3px solid #fbbf24; }
+        .chart-container { height: 300px; margin: 1rem 0; }
+        .portfolio-item { background: rgba(0, 102, 255, 0.1); border-left: 3px solid var(--primary); border-radius: 6px; padding: 1rem; margin-bottom: 0.5rem; }
+        .luxury-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+        .luxury-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .luxury-item:hover { transform: translateY(-4px); border-color: var(--primary); }
+        .luxury-item.owned { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .tab-button { padding: 0.75rem 1rem; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s; }
+        .tab-button.active { color: var(--text-primary); border-bottom-color: var(--primary); }
+        .price-badge { display: inline-block; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; font-weight: 600; }
+        .loss-badge { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
     </style>
 </head>
 <body class="bg-slate-950">
     <div id="app"></div>
 
     <script>
-        // ============ DATA LAYER ============
+        // ============ DATABASE ============
         const DB = {
             getUser: () => JSON.parse(localStorage.getItem('user')) || null,
             setUser: (u) => localStorage.setItem('user', JSON.stringify(u)),
@@ -56,23 +81,30 @@
             setPortfolio: (id, p) => localStorage.setItem(`portfolio_${id}`, JSON.stringify(p)),
             getLeaderboard: () => JSON.parse(localStorage.getItem('leaderboard')) || [],
             setLeaderboard: (l) => localStorage.setItem('leaderboard', JSON.stringify(l)),
-            getPriceHistory: (symbol) => JSON.parse(localStorage.getItem(`history_${symbol}`)) || []
+            getPriceHistory: (symbol) => JSON.parse(localStorage.getItem(`history_${symbol}`)) || [],
+            setPriceHistory: (symbol, hist) => localStorage.setItem(`history_${symbol}`, JSON.stringify(hist))
         };
 
         // ============ MARKETS ============
         const MARKETS = {
             crypto: [
-                { symbol: 'BTC', name: 'Bitcoin', basePrice: 67000, volatility: 8000, icon: '₿' },
-                { symbol: 'ETH', name: 'Ethereum', basePrice: 3500, volatility: 500, icon: 'Ξ' },
-                { symbol: 'SOL', name: 'Solana', basePrice: 210, volatility: 40, icon: '◆' }
+                { symbol: 'BTC', name: 'Bitcoin', basePrice: 67000, volatility: 8000, icon: '₿', change: 2.5 },
+                { symbol: 'ETH', name: 'Ethereum', basePrice: 3500, volatility: 500, icon: 'Ξ', change: 1.8 },
+                { symbol: 'SOL', name: 'Solana', basePrice: 210, volatility: 40, icon: '◆', change: 3.2 },
+                { symbol: 'ADA', name: 'Cardano', basePrice: 1.2, volatility: 0.3, icon: '⬢', change: -1.5 }
             ],
             stocks: [
-                { symbol: 'AAPL', name: 'Apple', basePrice: 230, volatility: 20, icon: '📱' },
-                { symbol: 'TSLA', name: 'Tesla', basePrice: 250, volatility: 30, icon: '⚡' },
-                { symbol: 'NVDA', name: 'Nvidia', basePrice: 1200, volatility: 150, icon: '🎮' }
+                { symbol: 'AAPL', name: 'Apple', basePrice: 230, volatility: 20, icon: '📱', change: 1.2 },
+                { symbol: 'TSLA', name: 'Tesla', basePrice: 250, volatility: 30, icon: '⚡', change: 2.8 },
+                { symbol: 'NVDA', name: 'Nvidia', basePrice: 1200, volatility: 150, icon: '🎮', change: 3.5 },
+                { symbol: 'META', name: 'Meta', basePrice: 500, volatility: 60, icon: 'f', change: -0.5 },
+                { symbol: 'AMZN', name: 'Amazon', basePrice: 190, volatility: 25, icon: '🛒', change: 1.8 },
+                { symbol: 'MSFT', name: 'Microsoft', basePrice: 420, volatility: 40, icon: '⊞', change: 2.1 }
             ],
             commodities: [
-                { symbol: 'GOLD', name: 'Oro', basePrice: 2400, volatility: 200, icon: '🟡' }
+                { symbol: 'GOLD', name: 'Oro', basePrice: 2400, volatility: 200, icon: '🟡', change: 0.8 },
+                { symbol: 'OIL', name: 'Petróleo', basePrice: 85, volatility: 15, icon: '🛢️', change: 1.5 },
+                { symbol: 'GAS', name: 'Gas Natural', basePrice: 3.5, volatility: 0.5, icon: '💨', change: -2.3 }
             ]
         };
 
@@ -82,115 +114,118 @@
         }
 
         // ============ LUXURY ITEMS (60+) ============
-        const LUXURY_ITEMS = [
-            // AUTOS
-            { id: 'lambo', category: 'Autos', name: 'Lamborghini Revuelto', price: 75000, icon: '🏎️', tier: 'premium' },
-            { id: 'ferrari', category: 'Autos', name: 'Ferrari SF90', price: 95000, icon: '🏎️', tier: 'premium' },
-            { id: 'bugatti', category: 'Autos', name: 'Bugatti Chiron', price: 280000, icon: '🏎️', tier: 'ultimate' },
-            { id: 'porsche', category: 'Autos', name: 'Porsche 911 Turbo', price: 120000, icon: '🏎️', tier: 'premium' },
-            { id: 'tesla', category: 'Autos', name: 'Tesla Roadster', price: 200000, icon: '⚡', tier: 'premium' },
-            { id: 'mclaren', category: 'Autos', name: 'McLaren P1', price: 250000, icon: '🏎️', tier: 'ultimate' },
-            { id: 'pagani', category: 'Autos', name: 'Pagani Huayra', price: 350000, icon: '🏎️', tier: 'ultimate' },
-            { id: 'koenigsegg', category: 'Autos', name: 'Koenigsegg Jesko', price: 450000, icon: '🏎️', tier: 'ultimate' },
-
-            // RELOJES
-            { id: 'rolex', category: 'Relojes', name: 'Rolex Submariner', price: 18000, icon: '⌚', tier: 'premium' },
-            { id: 'patek', category: 'Relojes', name: 'Patek Philippe Nautilus', price: 150000, icon: '⌚', tier: 'ultimate' },
-            { id: 'richard', category: 'Relojes', name: 'Richard Mille RM56', price: 500000, icon: '⌚', tier: 'ultimate' },
-            { id: 'omega', category: 'Relojes', name: 'Omega Seamaster', price: 12000, icon: '⌚', tier: 'premium' },
-            { id: 'cartier', category: 'Relojes', name: 'Cartier Santos', price: 50000, icon: '⌚', tier: 'premium' },
-            { id: 'tag', category: 'Relojes', name: 'TAG Heuer Carrera', price: 25000, icon: '⌚', tier: 'premium' },
-            { id: 'iwc', category: 'Relojes', name: 'IWC Portugieser', price: 35000, icon: '⌚', tier: 'premium' },
-            { id: 'jaeger', category: 'Relojes', name: 'Jaeger-LeCoultre', price: 40000, icon: '⌚', tier: 'premium' },
-            { id: 'breitling', category: 'Relojes', name: 'Breitling Navitimer', price: 30000, icon: '⌚', tier: 'premium' },
-            { id: 'hublot', category: 'Relojes', name: 'Hublot Big Bang', price: 60000, icon: '⌚', tier: 'premium' },
-
-            // INMUEBLES
-            { id: 'penthouse', category: 'Inmuebles', name: 'Penthouse Manhattan', price: 450000, icon: '🏢', tier: 'ultimate' },
-            { id: 'villa', category: 'Inmuebles', name: 'Villa Maldivas', price: 350000, icon: '🏝️', tier: 'ultimate' },
-            { id: 'castillo', category: 'Inmuebles', name: 'Castillo Escocés', price: 600000, icon: '🏰', tier: 'ultimate' },
-            { id: 'mansion', category: 'Inmuebles', name: 'Mansión Beverly Hills', price: 500000, icon: '🏛️', tier: 'ultimate' },
-            { id: 'chalet', category: 'Inmuebles', name: 'Chalet Suiza', price: 200000, icon: '⛷️', tier: 'premium' },
-            { id: 'island', category: 'Inmuebles', name: 'Isla Privada', price: 800000, icon: '🏝️', tier: 'ultimate' },
-            { id: 'resort', category: 'Inmuebles', name: 'Resort Bali', price: 300000, icon: '🏨', tier: 'premium' },
-            { id: 'skyscraper', category: 'Inmuebles', name: 'Piso Rascacielos', price: 350000, icon: '🌆', tier: 'premium' },
-
-            // TRANSPORTES
-            { id: 'yacht', category: 'Transportes', name: 'Yacht Privado', price: 800000, icon: '⛵', tier: 'ultimate' },
-            { id: 'helicopter', category: 'Transportes', name: 'Helicóptero Privado', price: 300000, icon: '🚁', tier: 'premium' },
-            { id: 'jet', category: 'Transportes', name: 'Jet Privado', price: 1200000, icon: '✈️', tier: 'ultimate' },
-            { id: 'submarine', category: 'Transportes', name: 'Submarino Privado', price: 500000, icon: '🛸', tier: 'ultimate' },
-            { id: 'speedboat', category: 'Transportes', name: 'Speedboat', price: 150000, icon: '🚤', tier: 'premium' },
-            { id: 'limousine', category: 'Transportes', name: 'Limousina Blindada', price: 50000, icon: '🚘', tier: 'premium' },
-
-            // JOYAS
-            { id: 'diamond', category: 'Joyas', name: 'Anillo Diamante 100ct', price: 500000, icon: '💎', tier: 'ultimate' },
-            { id: 'crown', category: 'Joyas', name: 'Corona Real', price: 400000, icon: '👑', tier: 'ultimate' },
-            { id: 'necklace', category: 'Joyas', name: 'Collar Perlas Raras', price: 250000, icon: '📿', tier: 'premium' },
-            { id: 'bracelet', category: 'Joyas', name: 'Brazalete Platino', price: 180000, icon: '💍', tier: 'premium' },
-            { id: 'earrings', category: 'Joyas', name: 'Aretes Esmeraldas', price: 150000, icon: '💍', tier: 'premium' },
-            { id: 'tiara', category: 'Joyas', name: 'Tiara de Diamantes', price: 300000, icon: '👑', tier: 'ultimate' },
-            { id: 'brooch', category: 'Joyas', name: 'Broche Vintage', price: 120000, icon: '✨', tier: 'premium' },
-            { id: 'pendant', category: 'Joyas', name: 'Colgante Jade', price: 100000, icon: '🔮', tier: 'premium' },
-
-            // EXPERIENCIAS
-            { id: 'safari', category: 'Experiencias', name: 'Safari Privado África', price: 100000, icon: '🦁', tier: 'premium' },
-            { id: 'space', category: 'Experiencias', name: 'Vuelo Espacial', price: 300000, icon: '🚀', tier: 'ultimate' },
-            { id: 'chef', category: 'Experiencias', name: 'Chef Michelin en Casa', price: 50000, icon: '👨‍🍳', tier: 'premium' },
-            { id: 'concert', category: 'Experiencias', name: 'Concierto Privado', price: 200000, icon: '🎤', tier: 'premium' },
-            { id: 'expedition', category: 'Experiencias', name: 'Expedición Polo Norte', price: 150000, icon: '🧊', tier: 'premium' },
-            { id: 'diving', category: 'Experiencias', name: 'Buceo Profundo', price: 80000, icon: '🤿', tier: 'premium' },
-            { id: 'formula1', category: 'Experiencias', name: 'GP F1 VIP', price: 120000, icon: '🏁', tier: 'premium' },
-            { id: 'monaco', category: 'Experiencias', name: 'Semana Mónaco', price: 250000, icon: '🎰', tier: 'premium' },
-
-            // TECH
-            { id: 'gold-iphone', category: 'Tech', name: 'iPhone Oro 24k', price: 45000, icon: '📱', tier: 'premium' },
-            { id: 'gaming-pc', category: 'Tech', name: 'PC Gaming Cuántica', price: 80000, icon: '🖥️', tier: 'premium' },
-            { id: 'robot', category: 'Tech', name: 'Robot Humanoides', price: 120000, icon: '🤖', tier: 'premium' },
-            { id: 'drone', category: 'Tech', name: 'Drone Militar Pro', price: 60000, icon: '🚁', tier: 'premium' },
-            { id: 'vr', category: 'Tech', name: 'Casco VR Premium', price: 35000, icon: '🥽', tier: 'premium' },
-            { id: 'tesla-bot', category: 'Tech', name: 'Tesla Bot', price: 150000, icon: '🤖', tier: 'ultimate' },
-            { id: 'quantum', category: 'Tech', name: 'Computadora Cuántica', price: 500000, icon: '⚛️', tier: 'ultimate' },
-            { id: 'ai-assistant', category: 'Tech', name: 'IA Privada Avanzada', price: 100000, icon: '🧠', tier: 'premium' },
-
-            // ARTE
-            { id: 'picasso', category: 'Arte', name: 'Picasso Original', price: 400000, icon: '🎨', tier: 'ultimate' },
-            { id: 'vangogh', category: 'Arte', name: 'Van Gogh Reproducción', price: 200000, icon: '🌻', tier: 'premium' },
-            { id: 'sculpture', category: 'Arte', name: 'Escultura Rodin', price: 300000, icon: '🗿', tier: 'ultimate' },
-            { id: 'davinci', category: 'Arte', name: 'Da Vinci Estudio', price: 350000, icon: '📜', tier: 'ultimate' },
-            { id: 'nft-art', category: 'Arte', name: 'NFT Arte Digital', price: 50000, icon: '🖼️', tier: 'premium' },
-            { id: 'street-art', category: 'Arte', name: 'Street Art Banksy', price: 150000, icon: '🎨', tier: 'premium' },
-
-            // COLECCIONES
-            { id: 'wine', category: 'Colecciones', name: 'Vino Château Pétrus', price: 30000, icon: '🍷', tier: 'premium' },
-            { id: 'whiskey', category: 'Colecciones', name: 'Whisky Macallan 1926', price: 80000, icon: '🥃', tier: 'premium' },
-            { id: 'cars-collection', category: 'Colecciones', name: 'Colección 5 Autos', price: 500000, icon: '🏎️', tier: 'ultimate' },
-            { id: 'watches-collection', category: 'Colecciones', name: 'Colección Relojes', price: 300000, icon: '⌚', tier: 'ultimate' },
-
-            // PROPIEDADES
-            { id: 'vineyard', category: 'Propiedades', name: 'Viñedo Francés', price: 250000, icon: '🍇', tier: 'premium' },
-            { id: 'forest', category: 'Propiedades', name: 'Bosque Privado', price: 200000, icon: '🌲', tier: 'premium' },
-            { id: 'mine', category: 'Propiedades', name: 'Mina de Oro', price: 500000, icon: '⛏️', tier: 'ultimate' },
-            { id: 'resort-prop', category: 'Propiedades', name: 'Resort Completo', price: 800000, icon: '🏨', tier: 'ultimate' },
-            { id: 'casino-prop', category: 'Propiedades', name: 'Casino Privado', price: 1000000, icon: '🎰', tier: 'ultimate' }
-        ];
+        const LUXURY_CATEGORIES = {
+            'Autos': [
+                { id: 'lambo', name: 'Lamborghini Revuelto', price: 75000, icon: '🏎️', tier: 'premium' },
+                { id: 'ferrari', name: 'Ferrari SF90', price: 95000, icon: '🏎️', tier: 'premium' },
+                { id: 'bugatti', name: 'Bugatti Chiron', price: 280000, icon: '🏎️', tier: 'ultimate' },
+                { id: 'porsche', name: 'Porsche 911 Turbo', price: 120000, icon: '🏎️', tier: 'premium' },
+                { id: 'tesla', name: 'Tesla Roadster', price: 200000, icon: '⚡', tier: 'premium' },
+                { id: 'mclaren', name: 'McLaren P1', price: 250000, icon: '🏎️', tier: 'ultimate' },
+                { id: 'pagani', name: 'Pagani Huayra', price: 350000, icon: '🏎️', tier: 'ultimate' },
+                { id: 'koenigsegg', name: 'Koenigsegg Jesko', price: 450000, icon: '🏎️', tier: 'ultimate' }
+            ],
+            'Relojes': [
+                { id: 'rolex', name: 'Rolex Submariner', price: 18000, icon: '⌚', tier: 'premium' },
+                { id: 'patek', name: 'Patek Philippe', price: 150000, icon: '⌚', tier: 'ultimate' },
+                { id: 'richard', name: 'Richard Mille RM56', price: 500000, icon: '⌚', tier: 'ultimate' },
+                { id: 'omega', name: 'Omega Seamaster', price: 12000, icon: '⌚', tier: 'premium' },
+                { id: 'cartier', name: 'Cartier Santos', price: 50000, icon: '⌚', tier: 'premium' },
+                { id: 'tag', name: 'TAG Heuer Carrera', price: 25000, icon: '⌚', tier: 'premium' },
+                { id: 'iwc', name: 'IWC Portugieser', price: 35000, icon: '⌚', tier: 'premium' },
+                { id: 'jaeger', name: 'Jaeger-LeCoultre', price: 40000, icon: '⌚', tier: 'premium' },
+                { id: 'breitling', name: 'Breitling Navitimer', price: 30000, icon: '⌚', tier: 'premium' },
+                { id: 'hublot', name: 'Hublot Big Bang', price: 60000, icon: '⌚', tier: 'premium' }
+            ],
+            'Inmuebles': [
+                { id: 'penthouse', name: 'Penthouse Manhattan', price: 450000, icon: '🏢', tier: 'ultimate' },
+                { id: 'villa', name: 'Villa Maldivas', price: 350000, icon: '🏝️', tier: 'ultimate' },
+                { id: 'castillo', name: 'Castillo Escocés', price: 600000, icon: '🏰', tier: 'ultimate' },
+                { id: 'mansion', name: 'Mansión Beverly Hills', price: 500000, icon: '🏛️', tier: 'ultimate' },
+                { id: 'chalet', name: 'Chalet Suiza', price: 200000, icon: '⛷️', tier: 'premium' },
+                { id: 'island', name: 'Isla Privada', price: 800000, icon: '🏝️', tier: 'ultimate' },
+                { id: 'resort', name: 'Resort Bali', price: 300000, icon: '🏨', tier: 'premium' },
+                { id: 'skyscraper', name: 'Piso Rascacielos', price: 350000, icon: '🌆', tier: 'premium' }
+            ],
+            'Transportes': [
+                { id: 'yacht', name: 'Yacht Privado', price: 800000, icon: '⛵', tier: 'ultimate' },
+                { id: 'helicopter', name: 'Helicóptero Privado', price: 300000, icon: '🚁', tier: 'premium' },
+                { id: 'jet', name: 'Jet Privado', price: 1200000, icon: '✈️', tier: 'ultimate' },
+                { id: 'submarine', name: 'Submarino Privado', price: 500000, icon: '🛸', tier: 'ultimate' },
+                { id: 'speedboat', name: 'Speedboat Luxury', price: 150000, icon: '🚤', tier: 'premium' },
+                { id: 'limousine', name: 'Limousina Blindada', price: 50000, icon: '🚘', tier: 'premium' }
+            ],
+            'Joyas': [
+                { id: 'diamond', name: 'Anillo Diamante 100ct', price: 500000, icon: '💎', tier: 'ultimate' },
+                { id: 'crown', name: 'Corona Real', price: 400000, icon: '👑', tier: 'ultimate' },
+                { id: 'necklace', name: 'Collar Perlas Raras', price: 250000, icon: '📿', tier: 'premium' },
+                { id: 'bracelet', name: 'Brazalete Platino', price: 180000, icon: '💍', tier: 'premium' },
+                { id: 'earrings', name: 'Aretes Esmeraldas', price: 150000, icon: '💍', tier: 'premium' },
+                { id: 'tiara', name: 'Tiara de Diamantes', price: 300000, icon: '👑', tier: 'ultimate' },
+                { id: 'brooch', name: 'Broche Vintage', price: 120000, icon: '✨', tier: 'premium' },
+                { id: 'pendant', name: 'Colgante Jade', price: 100000, icon: '🔮', tier: 'premium' }
+            ],
+            'Experiencias': [
+                { id: 'safari', name: 'Safari Privado África', price: 100000, icon: '🦁', tier: 'premium' },
+                { id: 'space', name: 'Vuelo Espacial', price: 300000, icon: '🚀', tier: 'ultimate' },
+                { id: 'chef', name: 'Chef Michelin en Casa', price: 50000, icon: '👨‍🍳', tier: 'premium' },
+                { id: 'concert', name: 'Concierto Privado', price: 200000, icon: '🎤', tier: 'premium' },
+                { id: 'expedition', name: 'Expedición Polo Norte', price: 150000, icon: '🧊', tier: 'premium' },
+                { id: 'diving', name: 'Buceo Profundo', price: 80000, icon: '🤿', tier: 'premium' },
+                { id: 'formula1', name: 'GP F1 VIP', price: 120000, icon: '🏁', tier: 'premium' },
+                { id: 'monaco', name: 'Semana Mónaco', price: 250000, icon: '🎰', tier: 'premium' }
+            ],
+            'Tech': [
+                { id: 'gold-iphone', name: 'iPhone Oro 24k', price: 45000, icon: '📱', tier: 'premium' },
+                { id: 'gaming-pc', name: 'PC Gaming Cuántica', price: 80000, icon: '🖥️', tier: 'premium' },
+                { id: 'robot', name: 'Robot Humanoides', price: 120000, icon: '🤖', tier: 'premium' },
+                { id: 'drone', name: 'Drone Militar Pro', price: 60000, icon: '🚁', tier: 'premium' },
+                { id: 'vr', name: 'Casco VR Premium', price: 35000, icon: '🥽', tier: 'premium' },
+                { id: 'tesla-bot', name: 'Tesla Bot', price: 150000, icon: '🤖', tier: 'ultimate' },
+                { id: 'quantum', name: 'Computadora Cuántica', price: 500000, icon: '⚛️', tier: 'ultimate' },
+                { id: 'ai-assistant', name: 'IA Privada Avanzada', price: 100000, icon: '🧠', tier: 'premium' }
+            ],
+            'Arte': [
+                { id: 'picasso', name: 'Picasso Original', price: 400000, icon: '🎨', tier: 'ultimate' },
+                { id: 'vangogh', name: 'Van Gogh Reproducción', price: 200000, icon: '🌻', tier: 'premium' },
+                { id: 'sculpture', name: 'Escultura Rodin', price: 300000, icon: '🗿', tier: 'ultimate' },
+                { id: 'davinci', name: 'Da Vinci Estudio', price: 350000, icon: '📜', tier: 'ultimate' },
+                { id: 'nft-art', name: 'NFT Arte Digital', price: 50000, icon: '🖼️', tier: 'premium' },
+                { id: 'street-art', name: 'Street Art Banksy', price: 150000, icon: '🎨', tier: 'premium' }
+            ],
+            'Colecciones': [
+                { id: 'wine', name: 'Vino Château Pétrus', price: 30000, icon: '🍷', tier: 'premium' },
+                { id: 'whiskey', name: 'Whisky Macallan 1926', price: 80000, icon: '🥃', tier: 'premium' },
+                { id: 'cars-collection', name: 'Colección 5 Autos', price: 500000, icon: '🏎️', tier: 'ultimate' },
+                { id: 'watches-collection', name: 'Colección Relojes', price: 300000, icon: '⌚', tier: 'ultimate' },
+                { id: 'stamps', name: 'Sellos Raros', price: 120000, icon: '🎫', tier: 'premium' },
+                { id: 'coins', name: 'Monedas Antiguas', price: 100000, icon: '💰', tier: 'premium' }
+            ],
+            'Propiedades': [
+                { id: 'vineyard', name: 'Viñedo Francés', price: 250000, icon: '🍇', tier: 'premium' },
+                { id: 'forest', name: 'Bosque Privado', price: 200000, icon: '🌲', tier: 'premium' },
+                { id: 'mine', name: 'Mina de Oro', price: 500000, icon: '⛏️', tier: 'ultimate' },
+                { id: 'resort-prop', name: 'Resort Completo', price: 800000, icon: '🏨', tier: 'ultimate' },
+                { id: 'casino-prop', name: 'Casino Privado', price: 1000000, icon: '🎰', tier: 'ultimate' }
+            ]
+        };
 
         // ============ ACHIEVEMENTS ============
         const ACHIEVEMENTS = [
-            { id: 'first-trade', name: 'Primer Trade', desc: 'Realiza tu primer inversión', icon: '📈', points: 10 },
-            { id: 'millionaire', name: 'Millonario', desc: 'Acumula 1 millón', icon: '💰', points: 100 },
-            { id: 'casino-streak', name: 'Racha Ganadora', desc: 'Gana 5 apuestas', icon: '🍀', points: 50 },
-            { id: 'collector', name: 'Coleccionista', desc: 'Compra 10 items', icon: '🏆', points: 75 },
-            { id: 'trader-pro', name: 'Trader Pro', desc: 'Realiza 50 trades', icon: '📊', points: 80 },
-            { id: 'rich', name: 'Súper Rico', desc: 'Alcanza 5 millones', icon: '💎', points: 150 },
-            { id: 'jackpot', name: 'Jackpot', desc: 'Gana +100k en una apuesta', icon: '🎉', points: 120 }
+            { id: 'first-trade', name: 'Primer Trade', icon: '📈', cond: (u) => u.trades >= 1 },
+            { id: 'millionaire', name: 'Millonario', icon: '💰', cond: (u) => u.balance >= 1000000 },
+            { id: 'collector', name: 'Coleccionista', icon: '🏆', cond: (u) => u.luxuryItems.length >= 10 },
+            { id: 'rich', name: 'Súper Rico', icon: '💎', cond: (u) => u.totalWon >= 500000 },
+            { id: 'trader-pro', name: 'Trader Pro', icon: '📊', cond: (u) => u.trades >= 50 },
+            { id: 'level-10', name: 'Maestro', icon: '🎖️', cond: (u) => u.level >= 10 }
         ];
 
         // ============ STATE ============
         let user = DB.getUser();
         let page = 'login';
+        let selectedMarket = null;
         let portfolio = [];
-        let leaderboard = DB.getLeaderboard();
+        let leaderboard = [];
 
         function initUser(username) {
             user = {
@@ -211,12 +246,13 @@
             };
             DB.setUser(user);
             updateLeaderboard();
+            portfolio = [];
         }
 
         function updateLeaderboard() {
             let lb = DB.getLeaderboard();
             lb = lb.filter(u => u.id !== user.id);
-            lb.push({ username: user.username, balance: user.balance, level: user.level, luxuryCount: user.luxuryItems.length, id: user.id });
+            lb.push({ username: user.username, balance: user.balance, level: user.level, rank: user.rank, luxuryCount: user.luxuryItems.length, id: user.id });
             lb.sort((a, b) => b.balance - a.balance);
             DB.setLeaderboard(lb.slice(0, 20));
             leaderboard = DB.getLeaderboard();
@@ -239,18 +275,51 @@
             user.balance -= total;
             user.totalInvested += total;
             user.trades++;
+            user.experience += 10;
             portfolio.push({ symbol, name: asset.name, qty, buyPrice: price, date: new Date() });
             user.portfolio = portfolio;
+            checkAchievements();
+            checkLevelUp();
 
             DB.setUser(user);
+            DB.setPortfolio(user.id, portfolio);
             updateLeaderboard();
             alert(`✅ Comprado ${qty} ${symbol} por $${total.toFixed(2)}`);
             document.getElementById('qty-input').value = '';
             render();
         }
 
+        function sellAsset(index) {
+            const holding = portfolio[index];
+            const asset = Object.values(MARKETS).flat().find(a => a.symbol === holding.symbol);
+            const currentPrice = getPrice(asset);
+            const saleValue = holding.qty * currentPrice;
+            const profit = saleValue - (holding.qty * holding.buyPrice);
+
+            user.balance += saleValue;
+            user.totalWon += Math.max(0, profit);
+            user.totalLost += Math.max(0, -profit);
+            user.experience += 5;
+
+            portfolio.splice(index, 1);
+            user.portfolio = portfolio;
+
+            DB.setUser(user);
+            DB.setPortfolio(user.id, portfolio);
+            updateLeaderboard();
+            alert(`✅ Vendido por $${saleValue.toFixed(2)} (${profit > 0 ? '+' : ''}$${profit.toFixed(2)})`);
+            render();
+        }
+
         function buyLuxury(itemId) {
-            const item = LUXURY_ITEMS.find(i => i.id === itemId);
+            let item = null;
+            for (const category in LUXURY_CATEGORIES) {
+                const found = LUXURY_CATEGORIES[category].find(i => i.id === itemId);
+                if (found) {
+                    item = { ...found, category };
+                    break;
+                }
+            }
             if (!item) return;
 
             if (user.balance < item.price) {
@@ -259,7 +328,8 @@
 
             user.balance -= item.price;
             user.luxuryItems.push(item);
-            user.experience += 20;
+            user.experience += 25;
+            checkAchievements();
             checkLevelUp();
 
             DB.setUser(user);
@@ -268,22 +338,13 @@
             render();
         }
 
-        function checkLevelUp() {
-            const newLevel = Math.floor(user.experience / 100) + 1;
-            if (newLevel > user.level) {
-                user.level = newLevel;
-                const ranks = ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'];
-                user.rank = ranks[Math.min(newLevel - 1, ranks.length - 1)];
-                alert(`🎉 ¡Subiste al nivel ${newLevel} (${user.rank})!`);
-            }
-        }
-
         function playGame(game) {
             const bet = parseFloat(document.getElementById(`${game}-bet`)?.value || 0);
             if (bet <= 0 || user.balance < bet) return alert('Apuesta inválida');
 
-            let won = Math.random() > 0.48;
-            let payout = won ? bet * (game === 'blackjack' ? 1.5 : 1) : 0;
+            const won = Math.random() > 0.48;
+            const multiplier = game === 'blackjack' ? 1.5 : 1;
+            const payout = won ? bet * multiplier : 0;
 
             user.balance = user.balance - bet + payout;
             if (won) user.totalWon += payout;
@@ -296,11 +357,36 @@
             render();
         }
 
+        function checkLevelUp() {
+            const newLevel = Math.floor(user.experience / 100) + 1;
+            if (newLevel > user.level) {
+                user.level = newLevel;
+                const ranks = ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'];
+                user.rank = ranks[Math.min(newLevel - 1, ranks.length - 1)];
+            }
+        }
+
+        function checkAchievements() {
+            ACHIEVEMENTS.forEach(ach => {
+                if (!user.achievements.includes(ach.id) && ach.cond(user)) {
+                    user.achievements.push(ach.id);
+                }
+            });
+        }
+
         function logout() {
             localStorage.clear();
             user = null;
             page = 'login';
             render();
+        }
+
+        function getAllLuxuryItems() {
+            let items = [];
+            for (const category in LUXURY_CATEGORIES) {
+                items = items.concat(LUXURY_CATEGORIES[category]);
+            }
+            return items;
         }
 
         // ============ RENDER ============
@@ -311,15 +397,16 @@
                     <div class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-950 to-blue-950">
                         <div class="w-full max-w-md">
                             <div class="glass rounded-2xl p-8 backdrop-blur-xl">
-                                <h1 class="text-5xl font-bold gradient-text text-center mb-2">ELITE</h1>
-                                <h2 class="text-3xl font-bold text-center mb-8">Trading Pro</h2>
+                                <h1 class="text-6xl font-bold gradient-text text-center mb-2">ELITE</h1>
+                                <h2 class="text-3xl font-bold text-center mb-2">Trading Pro</h2>
+                                <p class="text-center text-slate-400 mb-8">Investment & Casino Platform</p>
                                 <div class="space-y-4">
-                                    <input type="text" id="username" placeholder="Tu nombre de trader" class="w-full px-4 py-3 bg-slate-800 border border-blue-500 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <button onclick="initUser(document.getElementById('username').value); page='dashboard'; render();" class="w-full btn-primary py-3 rounded-lg text-white font-bold">
-                                        Comenzar
+                                    <input type="text" id="username" placeholder="Tu nombre de trader" maxlength="20" class="w-full px-4 py-3 bg-slate-800 border border-blue-500 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <button onclick="if(document.getElementById('username').value.trim()) { initUser(document.getElementById('username').value.trim()); page='dashboard'; render(); }" class="w-full btn-primary py-3 rounded-lg text-white font-bold">
+                                        Comenzar Trading
                                     </button>
                                 </div>
-                                <p class="text-center text-slate-400 text-xs mt-6">Comienza con $100,000</p>
+                                <p class="text-center text-slate-400 text-xs mt-6">💰 Comienza con $100,000 ficticio</p>
                             </div>
                         </div>
                     </div>
@@ -328,51 +415,105 @@
             }
 
             portfolio = user.portfolio || [];
-            const categories = [...new Set(LUXURY_ITEMS.map(i => i.category))];
-
             if (page === 'dashboard') {
+                const roi = user.totalInvested > 0 ? ((user.balance - 100000) / user.totalInvested * 100).toFixed(1) : 0;
+                const rankClass = `rank-${user.rank.toLowerCase()}`;
+
                 app.innerHTML = `
                     <div class="min-h-screen bg-gradient-to-br from-slate-950 to-blue-950 p-4">
                         <div class="max-w-7xl mx-auto">
                             <div class="flex justify-between items-center mb-8">
                                 <div>
                                     <h1 class="text-4xl font-bold gradient-text">${user.username}</h1>
-                                    <p class="text-slate-400">Nivel ${user.level} • <span class="rank-gold">${user.rank}</span></p>
+                                    <p class="text-slate-400">Nivel ${user.level} • <span class="rank-badge ${rankClass}">${user.rank}</span></p>
                                 </div>
                                 <button onclick="logout()" class="px-4 py-2 bg-red-600 rounded-lg text-sm font-bold hover:bg-red-700">Salir</button>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                                <div class="stat-box"><p class="text-slate-400 text-sm">Saldo</p><p class="text-3xl font-bold text-blue-400">$${user.balance.toFixed(0)}</p></div>
-                                <div class="stat-box"><p class="text-slate-400 text-sm">Ganado</p><p class="text-3xl font-bold text-green-400">$${user.totalWon.toFixed(0)}</p></div>
-                                <div class="stat-box"><p class="text-slate-400 text-sm">Perdido</p><p class="text-3xl font-bold text-red-400">$${user.totalLost.toFixed(0)}</p></div>
-                                <div class="stat-box"><p class="text-slate-400 text-sm">Posesiones</p><p class="text-3xl font-bold text-purple-400">${user.luxuryItems.length}</p></div>
+                                <div class="stat-box">
+                                    <p class="text-slate-400 text-sm">Saldo</p>
+                                    <p class="text-3xl font-bold text-blue-400">$${user.balance.toLocaleString('en-US', {maximumFractionDigits: 0})}</p>
+                                </div>
+                                <div class="stat-box">
+                                    <p class="text-slate-400 text-sm">ROI</p>
+                                    <p class="text-3xl font-bold text-green-400">${roi}%</p>
+                                </div>
+                                <div class="stat-box">
+                                    <p class="text-slate-400 text-sm">Trades</p>
+                                    <p class="text-3xl font-bold text-purple-400">${user.trades}</p>
+                                </div>
+                                <div class="stat-box">
+                                    <p class="text-slate-400 text-sm">Posesiones</p>
+                                    <p class="text-3xl font-bold text-yellow-400">${user.luxuryItems.length}</p>
+                                </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-8">
-                                <button onclick="page='trading'; render()" class="card hover:border-blue-500 transition cursor-pointer"><p class="text-2xl mb-2">📈</p><p class="font-bold">Trading</p></button>
-                                <button onclick="page='casino'; render()" class="card hover:border-red-500 transition cursor-pointer"><p class="text-2xl mb-2">🎰</p><p class="font-bold">Casino</p></button>
-                                <button onclick="page='shop'; render()" class="card hover:border-yellow-500 transition cursor-pointer"><p class="text-2xl mb-2">💎</p><p class="font-bold">Tienda</p></button>
-                                <button onclick="page='leaderboard'; render()" class="card hover:border-purple-500 transition cursor-pointer"><p class="text-2xl mb-2">🏆</p><p class="font-bold">Rankings</p></button>
+                                <button onclick="page='trading'; render()" class="card hover:border-blue-500 transition cursor-pointer text-center"><p class="text-3xl mb-2">📈</p><p class="font-bold">Trading</p><p class="text-xs text-slate-400">Mercados</p></button>
+                                <button onclick="page='casino'; render()" class="card hover:border-red-500 transition cursor-pointer text-center"><p class="text-3xl mb-2">🎰</p><p class="font-bold">Casino</p><p class="text-xs text-slate-400">Juegos</p></button>
+                                <button onclick="page='shop'; render()" class="card hover:border-yellow-500 transition cursor-pointer text-center"><p class="text-3xl mb-2">💎</p><p class="font-bold">Tienda</p><p class="text-xs text-slate-400">Lujos</p></button>
+                                <button onclick="page='leaderboard'; render()" class="card hover:border-purple-500 transition cursor-pointer text-center"><p class="text-3xl mb-2">🏆</p><p class="font-bold">Rankings</p><p class="text-xs text-slate-400">Competencia</p></button>
                             </div>
+
+                            ${portfolio.length > 0 ? `
+                                <div class="card mb-8">
+                                    <h3 class="text-xl font-bold mb-4 gradient-text">Mi Portafolio (${portfolio.length})</h3>
+                                    <div class="space-y-2">
+                                        ${portfolio.map((h, i) => {
+                                            const asset = Object.values(MARKETS).flat().find(a => a.symbol === h.symbol);
+                                            const current = getPrice(asset);
+                                            const diff = current - h.buyPrice;
+                                            return `
+                                                <div class="portfolio-item flex justify-between items-center">
+                                                    <div>
+                                                        <p class="font-bold">${h.symbol} - ${h.name}</p>
+                                                        <p class="text-xs text-slate-400">${h.qty} @ $${h.buyPrice.toFixed(2)}</p>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <p class="font-bold">$${(h.qty * current).toFixed(2)}</p>
+                                                        <p class="text-xs ${diff > 0 ? 'text-green-400' : 'text-red-400'}">${diff > 0 ? '+' : ''}${(diff * h.qty).toFixed(2)}</p>
+                                                        <button onclick="sellAsset(${i})" class="mt-1 px-2 py-1 bg-red-600 text-xs rounded hover:bg-red-700">Vender</button>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
                 `;
             } else if (page === 'trading') {
                 app.innerHTML = `
                     <div class="min-h-screen bg-gradient-to-br from-slate-950 to-blue-950 p-4">
-                        <div class="max-w-6xl mx-auto">
+                        <div class="max-w-7xl mx-auto">
                             <button onclick="page='dashboard'; render()" class="mb-4 px-4 py-2 bg-slate-700 rounded-lg text-sm">← Atrás</button>
-                            <h2 class="text-3xl font-bold gradient-text mb-6">📈 Mercados</h2>
+                            <h2 class="text-3xl font-bold gradient-text mb-6">📈 Mercados de Trading</h2>
+
                             ${Object.entries(MARKETS).map(([type, assets]) => `
                                 <div class="mb-8">
-                                    <h3 class="text-xl font-bold mb-4 capitalize">${type}</h3>
+                                    <h3 class="text-2xl font-bold mb-4 capitalize">${type === 'crypto' ? 'Criptomonedas' : type === 'stocks' ? 'Acciones' : 'Commodities'}</h3>
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        ${assets.map(a => `<div class="market-item" onclick="document.getElementById('selected-asset').value='${a.symbol}'; render();"><p class="text-xl">${a.icon} ${a.symbol}</p><p class="text-sm text-slate-400">${a.name}</p><p class="text-lg font-bold text-green-400">$${getPrice(a).toFixed(2)}</p></div>`).join('')}
+                                        ${assets.map(a => {
+                                            const price = getPrice(a);
+                                            return `
+                                                <div class="market-item">
+                                                    <p class="text-3xl mb-2">${a.icon}</p>
+                                                    <h4 class="font-bold text-lg">${a.symbol}</h4>
+                                                    <p class="text-sm text-slate-400 mb-2">${a.name}</p>
+                                                    <p class="text-2xl font-bold text-green-400">$${price.toFixed(2)}</p>
+                                                    <p class="text-xs ${a.change > 0 ? 'text-green-400' : 'text-red-400'} mb-3">${a.change > 0 ? '+' : ''}${a.change}%</p>
+                                                    <div class="flex gap-2">
+                                                        <input type="number" id="qty-input" placeholder="Cantidad" step="0.001" min="0" class="flex-1 px-2 py-1 bg-slate-800 border border-slate-700 rounded text-white text-sm">
+                                                        <button onclick="buyAsset('${a.symbol}')" class="px-3 py-1 btn-primary text-sm rounded">Comprar</button>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
                                     </div>
                                 </div>
                             `).join('')}
-                            <input type="hidden" id="selected-asset">
                         </div>
                     </div>
                 `;
@@ -381,11 +522,26 @@
                     <div class="min-h-screen bg-gradient-to-br from-slate-950 to-red-950 p-4">
                         <div class="max-w-4xl mx-auto">
                             <button onclick="page='dashboard'; render()" class="mb-4 px-4 py-2 bg-slate-700 rounded-lg text-sm">← Atrás</button>
-                            <h2 class="text-3xl font-bold gradient-text mb-6">🎰 Casino</h2>
+                            <h2 class="text-3xl font-bold gradient-text mb-6">🎰 Casino Elite</h2>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div class="card"><h3 class="font-bold mb-4">🎡 Ruleta</h3><input type="number" id="roulette-bet" placeholder="Apuesta" min="1" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white mb-2"><button onclick="playGame('roulette')" class="w-full btn-primary">Girar</button></div>
-                                <div class="card"><h3 class="font-bold mb-4">🃏 Blackjack</h3><input type="number" id="blackjack-bet" placeholder="Apuesta" min="1" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white mb-2"><button onclick="playGame('blackjack')" class="w-full btn-primary">Jugar</button></div>
-                                <div class="card"><h3 class="font-bold mb-4">🪙 Coin Flip</h3><input type="number" id="coinflip-bet" placeholder="Apuesta" min="1" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white mb-2"><button onclick="playGame('coinflip')" class="w-full btn-primary">Lanzar</button></div>
+                                <div class="card border-l-4 border-red-500">
+                                    <h3 class="text-xl font-bold mb-4">🎡 Ruleta</h3>
+                                    <p class="text-sm text-slate-400 mb-4">50% de probabilidad de ganar (x1)</p>
+                                    <input type="number" id="roulette-bet" placeholder="Apuesta" min="1" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white mb-2">
+                                    <button onclick="playGame('roulette')" class="w-full btn-primary">Girar</button>
+                                </div>
+                                <div class="card border-l-4 border-purple-500">
+                                    <h3 class="text-xl font-bold mb-4">🃏 Blackjack</h3>
+                                    <p class="text-sm text-slate-400 mb-4">Gana (x1.5) si tu mano es mejor</p>
+                                    <input type="number" id="blackjack-bet" placeholder="Apuesta" min="1" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white mb-2">
+                                    <button onclick="playGame('blackjack')" class="w-full btn-primary">Jugar</button>
+                                </div>
+                                <div class="card border-l-4 border-yellow-500">
+                                    <h3 class="text-xl font-bold mb-4">🪙 Coin Flip</h3>
+                                    <p class="text-sm text-slate-400 mb-4">50% de probabilidad de ganar (x1)</p>
+                                    <input type="number" id="coinflip-bet" placeholder="Apuesta" min="1" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white mb-2">
+                                    <button onclick="playGame('coinflip')" class="w-full btn-primary">Lanzar</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -396,18 +552,22 @@
                         <div class="max-w-7xl mx-auto">
                             <button onclick="page='dashboard'; render()" class="mb-4 px-4 py-2 bg-slate-700 rounded-lg text-sm">← Atrás</button>
                             <h2 class="text-3xl font-bold gradient-text mb-6">💎 Tienda de Lujos</h2>
-                            ${categories.map(cat => `
+
+                            ${Object.entries(LUXURY_CATEGORIES).map(([category, items]) => `
                                 <div class="mb-8">
-                                    <h3 class="text-2xl font-bold mb-4">${cat}</h3>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                        ${LUXURY_ITEMS.filter(i => i.category === cat).map(item => `
-                                            <div class="card hover:border-yellow-500 transition">
-                                                <p class="text-4xl mb-2">${item.icon}</p>
-                                                <h4 class="font-bold mb-1 text-sm">${item.name}</h4>
-                                                <p class="text-xl font-bold text-green-400 mb-3">$${item.price.toLocaleString()}</p>
-                                                <button onclick="buyLuxury('${item.id}')" class="w-full btn-primary text-sm">Comprar</button>
-                                            </div>
-                                        `).join('')}
+                                    <h3 class="text-2xl font-bold mb-4">${category}</h3>
+                                    <div class="luxury-grid">
+                                        ${items.map(item => {
+                                            const owned = user.luxuryItems.some(l => l.id === item.id);
+                                            return `
+                                                <div class="luxury-item ${owned ? 'owned' : ''}">
+                                                    <p class="text-4xl mb-2">${item.icon}</p>
+                                                    <h4 class="font-bold text-sm mb-1">${item.name}</h4>
+                                                    <p class="text-price-badge mb-3">$${item.price.toLocaleString()}</p>
+                                                    <button onclick="buyLuxury('${item.id}')" class="w-full btn-primary text-xs py-2">${owned ? '✓ Poseído' : 'Comprar'}</button>
+                                                </div>
+                                            `;
+                                        }).join('')}
                                     </div>
                                 </div>
                             `).join('')}
@@ -422,12 +582,12 @@
                             <h2 class="text-3xl font-bold gradient-text mb-6">🏆 Leaderboard Global</h2>
                             <div class="card">
                                 ${leaderboard.map((u, i) => `
-                                    <div class="leaderboard-row">
+                                    <div class="leaderboard-row ${i === 0 ? 'border-l-4 border-yellow-400' : ''}">
                                         <div class="flex items-center gap-4">
-                                            <p class="text-2xl font-bold w-8">${i + 1}</p>
+                                            <p class="text-2xl font-bold w-8">🥇🥈🥉'[i < 3 ? '🥇🥈🥉'[i] : i + 1}</p>
                                             <div>
                                                 <p class="font-bold">${u.username}</p>
-                                                <p class="text-xs text-slate-400">Nivel ${u.level} • ${u.luxuryCount} items</p>
+                                                <p class="text-xs text-slate-400">Nivel ${u.level} • ${u.rank} • ${u.luxuryCount} items</p>
                                             </div>
                                         </div>
                                         <p class="text-xl font-bold text-green-400">$${u.balance.toLocaleString()}</p>
