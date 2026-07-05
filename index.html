@@ -3,520 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Trading Pro - Premium</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.0/dist/apexcharts.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <title>Elite Trading - Plataforma Profesional</title>
+    <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.0.0/dist/lightweight-charts.standalone.production.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, h4, h5, h6 { font-family: 'Sora', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #0A0E27; color: #F1F5F9; }
 
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 50%, #16213e 100%);
-            min-height: 100vh;
-            color: #e2e8f0;
+        :root {
+            --primary: #0F3460;
+            --secondary: #16A34A;
+            --danger: #EA580C;
+            --neutral-dark: #0A0E27;
+            --neutral-surface: #1A1F35;
+            --neutral-border: #2D3B52;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
+        .app-container { display: flex; height: 100vh; }
+        .sidebar { width: 280px; background: linear-gradient(180deg, #0F172A 0%, #1A1F35 100%); border-right: 1px solid var(--neutral-border); padding: 24px; overflow-y: auto; display: flex; flex-direction: column; }
+        .sidebar-header { margin-bottom: 48px; }
+        .sidebar-logo { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+        .sidebar-subtitle { font-size: 12px; color: var(--text-secondary); }
 
-        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(148, 163, 184, 0.2); }
-        .gradient-text { background: linear-gradient(135deg, #6366f1, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card-premium { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 24px; transition: all 0.3s; }
-        .card-premium:hover { border-color: rgba(99, 102, 241, 0.6); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(99, 102, 241, 0.2); }
+        .nav { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-item { padding: 12px 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; color: var(--text-secondary); font-size: 14px; font-weight: 500; }
+        .nav-item:hover { background: rgba(15, 52, 96, 0.3); color: var(--text-primary); }
+        .nav-item.active { background: rgba(15, 52, 96, 0.5); border-left-color: var(--primary); color: var(--text-primary); }
 
-        .btn-primary { background: linear-gradient(135deg, #6366f1, #3b82f6); padding: 12px 24px; border-radius: 10px; color: white; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4); }
-        .btn-primary:active { transform: translateY(0); }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .content-area { flex: 1; overflow-y: auto; padding: 32px 40px; }
 
-        .stat-card { background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(59, 130, 246, 0.15)); border: 1px solid rgba(99, 102, 241, 0.3); padding: 20px; border-radius: 14px; }
+        .card { background: var(--neutral-surface); border: 1px solid var(--neutral-border); border-radius: 12px; padding: 24px; transition: all 0.2s; }
+        .card:hover { border-color: var(--primary); box-shadow: 0 4px 16px rgba(15, 52, 96, 0.15); }
 
-        .chart-box { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; padding: 24px; }
+        .button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .button-primary { background: var(--primary); color: white; }
+        .button-primary:hover { background: #0c2847; transform: translateY(-2px); }
 
-        .nav-item { padding: 12px 16px; cursor: pointer; border-left: 3px solid transparent; transition: all 0.3s; border-radius: 0 8px 8px 0; }
-        .nav-item:hover { background: rgba(99, 102, 241, 0.1); }
-        .nav-item.active { border-left-color: #6366f1; background: rgba(99, 102, 241, 0.15); }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .stat-card { background: var(--neutral-surface); border: 1px solid var(--neutral-border); border-radius: 12px; padding: 20px; }
+        .stat-label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .stat-value { font-size: 28px; font-weight: 700; }
+        .stat-value.positive { color: var(--secondary); }
+        .stat-value.negative { color: var(--danger); }
 
-        .market-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(99, 102, 241, 0.2); padding: 16px; border-radius: 12px; cursor: pointer; transition: all 0.3s; }
-        .market-card:hover { border-color: #6366f1; transform: translateY(-2px); }
-        .market-price { font-size: 28px; font-weight: 700; color: #3b82f6; }
-        .market-change { font-size: 13px; margin-top: 4px; }
-        .positive { color: #10b981; }
-        .negative { color: #ef4444; }
+        .section-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; }
+        .section-subtitle { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
 
-        .table-header { background: rgba(99, 102, 241, 0.1); padding: 16px; border-bottom: 1px solid rgba(99, 102, 241, 0.3); font-weight: 600; }
-        .table-row { padding: 16px; border-bottom: 1px solid rgba(148, 163, 184, 0.1); transition: background 0.2s; }
-        .table-row:hover { background: rgba(99, 102, 241, 0.05); }
+        .chart-container { background: var(--neutral-surface); border: 1px solid var(--neutral-border); border-radius: 12px; padding: 20px; margin-bottom: 32px; height: 380px; }
 
-        .roulette-container { perspective: 1000px; }
-        .roulette-wheel { width: 280px; height: 280px; background: conic-gradient(red 0deg 18deg, black 18deg 36deg, red 36deg 54deg, black 54deg 72deg, red 72deg 90deg, black 90deg 108deg, red 108deg 126deg, black 126deg 144deg, red 144deg 162deg, black 162deg 180deg, red 180deg 198deg, black 198deg 216deg, red 216deg 234deg, black 234deg 252deg, red 252deg 270deg, black 270deg 288deg, red 288deg 306deg, black 306deg 324deg, red 324deg 342deg, black 342deg 360deg); border-radius: 50%; position: relative; box-shadow: 0 0 80px rgba(99, 102, 241, 0.5), inset 0 0 80px rgba(0, 0, 0, 0.8); }
-        .roulette-ball { position: absolute; width: 18px; height: 18px; background: radial-gradient(circle at 30% 30%, #fbbf24, #f59e0b); border-radius: 50%; top: -9px; left: calc(50% - 9px); box-shadow: 0 4px 16px rgba(251, 191, 36, 0.8); }
-        .spinning { animation: spin 3s linear; }
-        @keyframes spin { to { transform: rotate(720deg); } }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--neutral-surface); border: 1px solid var(--neutral-border); border-radius: 16px; padding: 32px; max-width: 500px; width: 90%; }
 
-        .blackjack-table { background: radial-gradient(ellipse at center, rgba(34, 197, 94, 0.1), rgba(15, 23, 42, 1)); border: 2px solid #22c55e; border-radius: 50%; padding: 40px; aspect-ratio: 1; }
-        .hand-area { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-        .card { width: 70px; height: 100px; background: white; border: 2px solid #1f2937; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); }
-        .card.red { color: #ef4444; }
-        .card.black { color: #1f2937; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .form-input { width: 100%; padding: 12px 16px; border: 1px solid var(--neutral-border); border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: var(--text-primary); font-family: inherit; font-size: 14px; }
+        .form-input:focus { outline: none; border-color: var(--primary); background: rgba(15, 52, 96, 0.1); }
 
-        .league-rank { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; font-weight: 700; font-size: 14px; }
-        .rank-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1f2937; }
-        .rank-2 { background: linear-gradient(135deg, #d1d5db, #9ca3af); color: #1f2937; }
-        .rank-3 { background: linear-gradient(135deg, #d97706, #b45309); color: white; }
-        .rank-other { background: rgba(99, 102, 241, 0.3); color: white; }
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px; }
+        .market-card { background: var(--neutral-surface); border: 1px solid var(--neutral-border); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s; }
+        .market-card:hover { border-color: var(--primary); transform: translateY(-4px); }
+
+        .table { width: 100%; border-collapse: collapse; }
+        .table thead { background: rgba(15, 52, 96, 0.2); border-bottom: 1px solid var(--neutral-border); }
+        .table th { padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+        .table td { padding: 16px; border-bottom: 1px solid var(--neutral-border); font-size: 14px; }
+
+        #rouletteCanvas { border-radius: 12px; max-width: 100%; border: 1px solid var(--neutral-border); }
+
+        .playing-card { width: 80px; height: 120px; background: white; border: 2px solid #333; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 32px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); animation: cardFlip 0.6s; }
+        .playing-card.red { color: #EF4444; }
+        .playing-card.black { color: #1F2937; }
+        @keyframes cardFlip { 0% { transform: rotateY(90deg); } 100% { transform: rotateY(0deg); } }
+
+        .cards-display { display: flex; justify-content: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; min-height: 120px; align-items: center; }
+
+        .login-container { display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .login-box { background: var(--neutral-surface); border: 1px solid var(--neutral-border); border-radius: 16px; padding: 40px; max-width: 400px; width: 90%; }
+        .login-title { font-size: 32px; font-weight: 700; margin-bottom: 8px; color: var(--primary); }
     </style>
 </head>
 <body>
-    <div class="flex h-screen bg-slate-950">
-        <!-- SIDEBAR -->
-        <div class="w-72 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-r border-slate-800 overflow-y-auto p-6">
-            <div class="mb-12">
-                <h1 class="text-4xl font-bold gradient-text mb-2">ELITE</h1>
-                <p class="text-xs text-gray-500">TRADING PRO</p>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">ELITE</div>
+                <div class="sidebar-subtitle">TRADING PRO</div>
             </div>
-            <nav id="navbar" class="space-y-1"></nav>
-        </div>
+            <nav class="nav" id="navbar"></nav>
+        </aside>
 
-        <!-- MAIN CONTENT -->
-        <div class="flex-1 overflow-y-auto bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900">
-            <div id="content" class="p-8 max-w-7xl mx-auto"></div>
+        <div class="main-content">
+            <div class="content-area" id="content"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="investModal">
+        <div class="modal-content">
+            <h2 class="section-title">Invertir en <span id="modalAsset"></span></h2>
+            <div class="form-group">
+                <label class="form-label">Cantidad</label>
+                <input type="number" class="form-input" id="investAmount" placeholder="0" step="0.001">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Precio unitario</label>
+                <div class="stat-value" id="modalPrice">$0.00</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Total a invertir</label>
+                <div class="stat-value" id="modalTotal">$0.00</div>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="button button-primary" onclick="confirmInvestment()" style="flex: 1;">Invertir</button>
+                <button class="button" onclick="closeModal()" style="flex: 1; background: var(--neutral-surface); border: 1px solid var(--neutral-border);">Cancelar</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // =========== STATE ===========
-        const STATE = {
-            user: null,
-            page: 'login',
-            portfolio: [],
-            charts: {}
+        const APP = { user: null, page: 'login', portfolio: [], groups: [], currentAsset: null };
+        const DB = {
+            save: (k, v) => localStorage.setItem(`elite_${k}`, JSON.stringify(v)),
+            load: (k) => { const d = localStorage.getItem(`elite_${k}`); return d ? JSON.parse(d) : null; },
+            getUser: () => DB.load('user'),
+            setUser: (u) => DB.save('user', u),
+            getPortfolio: (uid) => DB.load(`portfolio_${uid}`) || [],
+            setPortfolio: (uid, p) => DB.save(`portfolio_${uid}`, p),
+            getGroups: () => DB.load('groups') || [],
+            setGroups: (g) => DB.save('groups', g),
         };
 
         const MARKETS = {
             crypto: [
-                { id: 'BTC', name: 'Bitcoin', icon: '₿', price: 67500, vol: 8000 },
-                { id: 'ETH', name: 'Ethereum', icon: 'Ξ', price: 3580, vol: 500 },
-                { id: 'SOL', name: 'Solana', icon: '◎', price: 215, vol: 40 }
+                { id: 'BTC', name: 'Bitcoin', basePrice: 67500, volatility: 0.08 },
+                { id: 'ETH', name: 'Ethereum', basePrice: 3580, volatility: 0.12 },
+                { id: 'SOL', name: 'Solana', basePrice: 215, volatility: 0.15 },
             ],
             stocks: [
-                { id: 'AAPL', name: 'Apple', icon: '🍎', price: 230, vol: 20 },
-                { id: 'TSLA', name: 'Tesla', icon: '⚡', price: 252, vol: 30 },
-                { id: 'MSFT', name: 'Microsoft', icon: '💻', price: 425, vol: 40 }
-            ]
+                { id: 'AAPL', name: 'Apple', basePrice: 230, volatility: 0.05 },
+                { id: 'TSLA', name: 'Tesla', basePrice: 252, volatility: 0.10 },
+                { id: 'MSFT', name: 'Microsoft', basePrice: 425, volatility: 0.06 },
+            ],
         };
 
-        const DB = {
-            save: (k, v) => localStorage.setItem(`elite_${k}`, JSON.stringify(v)),
-            load: (k) => JSON.parse(localStorage.getItem(`elite_${k}`)) || null,
-            getUser: () => DB.load('user'),
-            setUser: (u) => DB.save('user', u),
-            getPortfolio: (id) => DB.load(`port_${id}`) || [],
-            setPortfolio: (id, p) => DB.save(`port_${id}`, p)
-        };
-
-        // =========== UTILS ===========
         function getPrice(asset) {
-            return asset.price + (Math.random() - 0.5) * asset.vol;
+            const variance = (Math.random() - 0.5) * asset.volatility * asset.basePrice;
+            return Math.max(asset.basePrice * 0.5, asset.basePrice + variance);
         }
 
         function getPriceHistory(asset, days = 30) {
             const history = [];
-            let price = asset.price;
-            for (let i = 0; i < days; i++) {
-                price += (Math.random() - 0.5) * asset.vol;
-                history.push(Math.round(price * 100) / 100);
+            let price = asset.basePrice;
+            const now = Math.floor(Date.now() / 1000);
+            for (let i = days; i >= 0; i--) {
+                const change = (Math.random() - 0.5) * asset.volatility * price;
+                price = Math.max(price * 0.8, price + change);
+                history.push({ time: now - (i * 86400), value: Math.round(price * 100) / 100 });
             }
             return history;
         }
 
-        // =========== NAVBAR ===========
         function renderNavbar() {
             const items = [
-                { page: 'dashboard', label: '📊 Dashboard' },
-                { page: 'markets', label: '📈 Mercados' },
-                { page: 'portfolio', label: '💼 Portafolio' },
-                { page: 'casino', label: '🎰 Casino' },
-                { page: 'leagues', label: '🏆 Ligas' },
-                { page: 'analytics', label: '📉 Analytics' },
-                { page: 'education', label: '📚 Educación' },
-                { page: 'logout', label: '🚪 Salir' }
+                { id: 'dashboard', label: '📊 Dashboard' },
+                { id: 'markets', label: '📈 Mercados' },
+                { id: 'portfolio', label: '💼 Portafolio' },
+                { id: 'casino', label: '🎰 Casino' },
+                { id: 'groups', label: '👥 Grupos' },
+                { id: 'logout', label: '🚪 Salir' },
             ];
-
-            document.getElementById('navbar').innerHTML = items.map(i => `
-                <div class="nav-item ${STATE.page === i.page ? 'active' : ''}" onclick="navigate('${i.page}')">${i.label}</div>
-            `).join('');
+            document.getElementById('navbar').innerHTML = items.map(item => `<div class="nav-item ${APP.page === item.id ? 'active' : ''}" onclick="navigate('${item.id}')">${item.label}</div>`).join('');
         }
 
         function navigate(page) {
-            if (page === 'logout') {
-                localStorage.clear();
-                STATE.user = null;
-            }
-            STATE.page = page;
+            if (page === 'logout') { localStorage.clear(); APP.user = null; location.reload(); return; }
+            APP.page = page;
             render();
         }
 
-        // =========== LOGIN ===========
         function handleLogin() {
-            const name = document.getElementById('name-input')?.value || '';
-            if (!name.trim()) return alert('Nombre requerido');
-            STATE.user = {
-                id: Date.now(),
-                name,
-                balance: 100000,
-                won: 0,
-                lost: 0
-            };
-            DB.setUser(STATE.user);
-            STATE.page = 'dashboard';
+            const name = document.getElementById('username')?.value;
+            if (!name) return alert('Nombre requerido');
+            APP.user = { id: Date.now(), name, balance: 100000, totalWon: 0, totalLost: 0 };
+            DB.setUser(APP.user);
+            APP.page = 'dashboard';
             render();
         }
 
-        // =========== DASHBOARD ===========
-        function renderDashboard() {
-            const portfolio = DB.getPortfolio(STATE.user.id);
-            const invested = portfolio.reduce((s, p) => s + p.buyPrice * p.amount, 0);
-            const roi = ((STATE.user.won - STATE.user.lost) / 100000 * 100).toFixed(2);
-
-            return `
-                <div class="animate__animated animate__fadeIn">
-                    <h1 class="text-5xl font-bold gradient-text mb-10">Dashboard</h1>
-
-                    <!-- TOP STATS -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                        <div class="stat-card">
-                            <p class="text-gray-400 text-sm mb-2">SALDO</p>
-                            <p class="text-3xl font-bold text-green-400">$${STATE.user.balance.toLocaleString('en', {maximumFractionDigits: 0})}</p>
-                        </div>
-                        <div class="stat-card">
-                            <p class="text-gray-400 text-sm mb-2">INVERTIDO</p>
-                            <p class="text-3xl font-bold text-blue-400">$${Math.round(invested).toLocaleString('en', {maximumFractionDigits: 0})}</p>
-                        </div>
-                        <div class="stat-card">
-                            <p class="text-gray-400 text-sm mb-2">GANANCIA</p>
-                            <p class="text-3xl font-bold text-emerald-400">$${STATE.user.won.toLocaleString('en', {maximumFractionDigits: 0})}</p>
-                        </div>
-                        <div class="stat-card">
-                            <p class="text-gray-400 text-sm mb-2">ROI</p>
-                            <p class="text-3xl font-bold ${roi >= 0 ? 'text-green-400' : 'text-red-400'}">${roi}%</p>
-                        </div>
-                    </div>
-
-                    <!-- QUICK ACCESS -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <div class="card-premium text-center cursor-pointer hover:scale-105" onclick="navigate('markets')">
-                            <p class="text-4xl mb-2">📈</p>
-                            <p class="font-bold">Trading</p>
-                        </div>
-                        <div class="card-premium text-center cursor-pointer hover:scale-105" onclick="navigate('casino')">
-                            <p class="text-4xl mb-2">🎰</p>
-                            <p class="font-bold">Casino</p>
-                        </div>
-                        <div class="card-premium text-center cursor-pointer hover:scale-105" onclick="navigate('portfolio')">
-                            <p class="text-4xl mb-2">💼</p>
-                            <p class="font-bold">Portfolio</p>
-                        </div>
-                        <div class="card-premium text-center cursor-pointer hover:scale-105" onclick="navigate('analytics')">
-                            <p class="text-4xl mb-2">📊</p>
-                            <p class="font-bold">Analytics</p>
-                        </div>
-                    </div>
-
-                    <!-- PORTFOLIO PREVIEW -->
-                    ${portfolio.length > 0 ? `
-                        <div class="card-premium mb-8">
-                            <h2 class="text-2xl font-bold mb-4">Posiciones Activas</h2>
-                            <div class="space-y-2">
-                                ${portfolio.slice(0, 5).map(p => {
-                                    const asset = [...MARKETS.crypto, ...MARKETS.stocks].find(a => a.id === p.symbol);
-                                    const price = getPrice(asset);
-                                    const change = ((price - p.buyPrice) / p.buyPrice * 100).toFixed(2);
-                                    return `
-                                        <div class="flex justify-between p-3 bg-slate-800 rounded-lg">
-                                            <span class="font-bold">${p.symbol}: ${p.amount} @ $${p.buyPrice.toFixed(2)}</span>
-                                            <span class="${change >= 0 ? 'positive' : 'negative'}">${change >= 0 ? '+' : ''}${change}%</span>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-        }
-
-        // =========== MARKETS ===========
-        function renderMarkets() {
-            const all = [...MARKETS.crypto, ...MARKETS.stocks];
-            return `
-                <div class="animate__animated animate__fadeIn">
-                    <h1 class="text-5xl font-bold gradient-text mb-10">Mercados Disponibles</h1>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        ${all.map(a => {
-                            const price = getPrice(a);
-                            const change = (Math.random() - 0.5) * 5;
-                            return `
-                                <div class="market-card">
-                                    <div class="flex justify-between mb-4">
-                                        <div>
-                                            <p class="text-gray-400 text-xs">${a.id}</p>
-                                            <p class="font-bold text-lg">${a.name}</p>
-                                        </div>
-                                        <p class="text-3xl">${a.icon}</p>
-                                    </div>
-                                    <p class="market-price">$${price.toFixed(2)}</p>
-                                    <p class="market-change ${change >= 0 ? 'positive' : 'negative'}">${change >= 0 ? '+' : ''}${change.toFixed(2)}%</p>
-                                    <button onclick="buyAsset('${a.id}')" class="btn-primary w-full mt-4">Invertir</button>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function buyAsset(id) {
-            const amount = prompt(`¿Cuántas unidades de ${id}?`);
-            if (!amount) return;
-            const asset = [...MARKETS.crypto, ...MARKETS.stocks].find(a => a.id === id);
-            const price = getPrice(asset);
-            const cost = price * parseFloat(amount);
-            if (cost > STATE.user.balance) return alert('Saldo insuficiente');
-            STATE.user.balance -= cost;
-            const port = DB.getPortfolio(STATE.user.id);
-            port.push({ symbol: id, amount: parseFloat(amount), buyPrice: price });
-            DB.setUser(STATE.user);
-            DB.setPortfolio(STATE.user.id, port);
-            alert(`✅ Compraste ${amount} ${id}`);
-            render();
-        }
-
-        // =========== CASINO ===========
-        function renderCasino() {
-            return `
-                <div class="animate__animated animate__fadeIn">
-                    <h1 class="text-5xl font-bold gradient-text mb-10">🎰 Casino Profesional</h1>
-
-                    <div class="card-premium mb-8">
-                        <div class="flex flex-col items-center gap-8">
-                            <div class="roulette-container">
-                                <div class="roulette-wheel" id="wheel">
-                                    <div class="roulette-ball"></div>
-                                </div>
-                            </div>
-
-                            <div class="w-full max-w-md">
-                                <div class="mb-4">
-                                    <label class="text-sm font-bold mb-2 block">Apuesta</label>
-                                    <input type="number" id="bet" max="${STATE.user.balance}" placeholder="$" class="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white">
-                                </div>
-                                <button onclick="spin()" class="btn-primary w-full py-4 text-lg font-bold">GIRAR</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function spin() {
-            const bet = parseFloat(document.getElementById('bet')?.value || 0);
-            if (bet <= 0 || bet > STATE.user.balance) return alert('Apuesta inválida');
-            STATE.user.balance -= bet;
-            const wheel = document.getElementById('wheel');
-            wheel.classList.add('spinning');
-            setTimeout(() => {
-                const won = Math.random() > 0.486;
-                if (won) {
-                    STATE.user.balance += bet * 2;
-                    STATE.user.won += bet;
-                    alert('🎉 ¡GANASTE!');
-                } else {
-                    STATE.user.lost += bet;
-                    alert('😢 Perdiste');
-                }
-                DB.setUser(STATE.user);
-                wheel.classList.remove('spinning');
-                document.getElementById('bet').value = '';
-                render();
-            }, 3000);
-        }
-
-        // =========== PORTFOLIO ===========
-        function renderPortfolio() {
-            const port = DB.getPortfolio(STATE.user.id);
-            if (!port.length) return '<p class="text-center text-gray-400">Sin inversiones</p>';
-            return `
-                <div class="animate__animated animate__fadeIn">
-                    <h1 class="text-5xl font-bold gradient-text mb-10">Mi Portafolio</h1>
-                    ${port.map(p => {
-                        const a = [...MARKETS.crypto, ...MARKETS.stocks].find(x => x.id === p.symbol);
-                        const price = getPrice(a);
-                        const pct = ((price - p.buyPrice) / p.buyPrice * 100).toFixed(2);
-                        return `
-                            <div class="card-premium mb-4">
-                                <div class="flex justify-between">
-                                    <div>
-                                        <p class="text-xl font-bold">${p.symbol}</p>
-                                        <p class="text-sm text-gray-400">${p.amount} @ $${p.buyPrice.toFixed(2)}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-2xl font-bold">$${(p.amount * price).toFixed(2)}</p>
-                                        <p class="${pct >= 0 ? 'positive' : 'negative'}">${pct >= 0 ? '+' : ''}${pct}%</p>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            `;
-        }
-
-        // =========== LEAGUES ===========
-        function renderLeagues() {
-            return `
-                <div class="animate__animated animate__fadeIn">
-                    <h1 class="text-5xl font-bold gradient-text mb-10">🏆 Ligas Competitivas</h1>
-                    <button onclick="createLeague()" class="btn-primary mb-8">+ Nueva Liga</button>
-                    <p class="text-gray-400">Las ligas creadas aparecerán aquí</p>
-                </div>
-            `;
-        }
-
-        function createLeague() {
-            const name = prompt('Nombre:');
-            if (name) alert('Liga ' + name + ' creada');
-        }
-
-        // =========== ANALYTICS ===========
-        function renderAnalytics() {
-            const port = DB.getPortfolio(STATE.user.id);
-            const roi = ((STATE.user.won - STATE.user.lost) / 100000 * 100).toFixed(2);
-            return `
-                <div class="animate__animated animate__fadeIn">
-                    <h1 class="text-5xl font-bold gradient-text mb-10">📈 Análisis Detallado</h1>
-
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                        <div class="stat-card">
-                            <p class="text-gray-400 text-xs">ROI</p>
-                            <p class="text-2xl font-bold ${roi >= 0 ? 'text-green-400' : 'text-red-400'}">${roi}%</p>
-                        </div>
-                        <div class="stat-card">
-                            <p class="text-gray-400 text-xs">GANANCIA</p>
-                            <p class="text-2xl font-bold positive">$${STATE.user.won}</p>
-                        </div>
-                        <div class="stat-card">
-                            <p class="text-gray-400 text-xs">PÉRDIDA</p>
-                            <p class="text-2xl font-bold negative">$${STATE.user.lost}</p>
-                        </div>
-                        <div class="stat-card">
-                            <p class="text-gray-400 text-xs">POSICIONES</p>
-                            <p class="text-2xl font-bold text-blue-400">${port.length}</p>
-                        </div>
-                    </div>
-
-                    <div class="card-premium">
-                        <h3 class="text-xl font-bold mb-4">Resumen Financiero</h3>
-                        <div class="space-y-2">
-                            <div class="flex justify-between p-3 bg-slate-800 rounded">
-                                <span>Capital Inicial</span>
-                                <span class="font-bold">$100,000</span>
-                            </div>
-                            <div class="flex justify-between p-3 bg-slate-800 rounded">
-                                <span>Capital Actual</span>
-                                <span class="font-bold">${STATE.user.balance.toLocaleString()}</span>
-                            </div>
-                            <div class="flex justify-between p-3 bg-slate-800 rounded">
-                                <span>Neto (Gan - Per)</span>
-                                <span class="font-bold positive">$${(STATE.user.won - STATE.user.lost).toLocaleString()}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // =========== EDUCATION ===========
-        function renderEducation() {
-            return `
-                <div class="animate__animated animate__fadeIn">
-                    <h1 class="text-5xl font-bold gradient-text mb-10">📚 Centro Educativo</h1>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <div class="card-premium">
-                            <p class="text-3xl mb-3">₿</p>
-                            <h3 class="text-xl font-bold mb-2">Bitcoin</h3>
-                            <p class="text-sm text-gray-400">Primera criptomoneda descentralizada. No controlada por gobiernos.</p>
-                        </div>
-                        <div class="card-premium">
-                            <p class="text-3xl mb-3">Ξ</p>
-                            <h3 class="text-xl font-bold mb-2">Ethereum</h3>
-                            <p class="text-sm text-gray-400">Plataforma de contratos inteligentes y aplicaciones descentralizadas.</p>
-                        </div>
-                        <div class="card-premium">
-                            <p class="text-3xl mb-3">◎</p>
-                            <h3 class="text-xl font-bold mb-2">Solana</h3>
-                            <p class="text-sm text-gray-400">Blockchain de alta velocidad para transacciones rápidas.</p>
-                        </div>
-                    </div>
-
-                    <h2 class="text-2xl font-bold mb-4">Estrategias</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="card-premium">
-                            <h3 class="font-bold mb-2">📊 DCA</h3>
-                            <p class="text-sm text-gray-400">Invertir regularmente cantidades fijas</p>
-                        </div>
-                        <div class="card-premium">
-                            <h3 class="font-bold mb-2">📈 Take Profit</h3>
-                            <p class="text-sm text-gray-400">Vender en objetivos de ganancia</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // =========== LOGIN ===========
         function renderLogin() {
-            return `
-                <div class="min-h-screen flex items-center justify-center">
-                    <div class="w-full max-w-md">
-                        <div class="card-premium p-10 text-center">
-                            <h1 class="text-5xl font-bold gradient-text mb-3">ELITE PRO</h1>
-                            <p class="text-gray-400 mb-8">Plataforma Premium de Trading</p>
-                            <input type="text" id="name-input" placeholder="Tu nombre" class="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg mb-4 text-white">
-                            <button onclick="handleLogin()" class="btn-primary w-full py-3 text-lg">Comenzar</button>
-                            <p class="text-xs text-gray-500 mt-6">$100,000 de capital ficticio</p>
-                        </div>
-                    </div>
-                </div>
-            `;
+            return `<div class="login-container"><div class="login-box"><div class="login-title">ELITE</div><div class="section-subtitle" style="margin-bottom: 32px;">Plataforma de Trading Profesional</div><div class="form-group"><label class="form-label">Tu nombre</label><input type="text" id="username" class="form-input" placeholder="Ingresa tu nombre"></div><button class="button button-primary" onclick="handleLogin()" style="width: 100%; margin-top: 24px;">Comenzar</button></div></div>`;
         }
 
-        // =========== RENDER ===========
+        function renderDashboard() {
+            const portfolio = DB.getPortfolio(APP.user.id);
+            const invested = portfolio.reduce((s, p) => s + (p.amount * p.buyPrice), 0);
+            const roi = ((APP.user.balance - 100000) / 100000 * 100).toFixed(2);
+
+            return `<div><h1 class="section-title">Dashboard</h1><div class="stat-grid"><div class="stat-card"><div class="stat-label">Saldo Disponible</div><div class="stat-value">$${APP.user.balance.toLocaleString('en', {maximumFractionDigits: 0})}</div></div><div class="stat-card"><div class="stat-label">Invertido</div><div class="stat-value">$${Math.round(invested).toLocaleString()}</div></div><div class="stat-card"><div class="stat-label">Ganancia</div><div class="stat-value positive">$${APP.user.totalWon}</div></div><div class="stat-card"><div class="stat-label">ROI</div><div class="stat-value ${roi >= 0 ? 'positive' : 'negative'}">${roi}%</div></div></div>${portfolio.length > 0 ? `<h2 class="section-title">Posiciones Activas</h2><div class="card"><table class="table"><thead><tr><th>Activo</th><th>Cantidad</th><th>P. Compra</th><th>V. Actual</th><th>Cambio %</th></tr></thead><tbody>${portfolio.map(p => { const asset = [...MARKETS.crypto, ...MARKETS.stocks].find(a => a.id === p.symbol); const price = getPrice(asset); const change = ((price - p.buyPrice) / p.buyPrice * 100).toFixed(2); return `<tr><td><strong>${p.symbol}</strong></td><td>${p.amount}</td><td>$${p.buyPrice.toFixed(2)}</td><td>$${(p.amount * price).toFixed(2)}</td><td class="stat-value ${change >= 0 ? 'positive' : 'negative'}" style="font-size: 14px;">${change >= 0 ? '+' : ''}${change}%</td></tr>`; }).join('')}</tbody></table></div>` : ''}</div>`;
+        }
+
+        function renderMarkets() {
+            return `<div><h1 class="section-title">Mercados Disponibles</h1><div class="market-grid">${[...MARKETS.crypto, ...MARKETS.stocks].map(asset => { const price = getPrice(asset); const change = (Math.random() - 0.5) * 5; return `<div class="market-card" onclick="openInvestModal('${asset.id}')"><div class="section-subtitle">${asset.id}</div><div style="font-size: 18px; font-weight: 700; margin: 12px 0;">${asset.name}</div><div class="stat-value">$${price.toFixed(2)}</div><div class="stat-value ${change >= 0 ? 'positive' : 'negative'}" style="font-size: 14px; margin-top: 8px;">${change >= 0 ? '▲' : '▼'} ${Math.abs(change).toFixed(2)}%</div></div>`;}).join('')}</div></div>`;
+        }
+
+        function openInvestModal(assetId) {
+            APP.currentAsset = [...MARKETS.crypto, ...MARKETS.stocks].find(a => a.id === assetId);
+            document.getElementById('modalAsset').textContent = APP.currentAsset.name;
+            document.getElementById('modalPrice').textContent = '$' + getPrice(APP.currentAsset).toFixed(2);
+            document.getElementById('investAmount').value = '';
+            document.getElementById('investAmount').oninput = () => {
+                const amount = parseFloat(document.getElementById('investAmount').value) || 0;
+                const price = parseFloat(document.getElementById('modalPrice').textContent.replace('$', ''));
+                document.getElementById('modalTotal').textContent = '$' + (amount * price).toFixed(2);
+            };
+            document.getElementById('investModal').classList.add('active');
+        }
+
+        function confirmInvestment() {
+            const amount = parseFloat(document.getElementById('investAmount').value);
+            if (!amount || amount <= 0) return alert('Cantidad inválida');
+            const price = getPrice(APP.currentAsset);
+            const cost = amount * price;
+            if (cost > APP.user.balance) return alert('Saldo insuficiente');
+            APP.user.balance -= cost;
+            const portfolio = DB.getPortfolio(APP.user.id);
+            portfolio.push({ symbol: APP.currentAsset.id, amount, buyPrice: price, date: new Date().toISOString() });
+            DB.setUser(APP.user);
+            DB.setPortfolio(APP.user.id, portfolio);
+            document.getElementById('investModal').classList.remove('active');
+            render();
+        }
+
+        function closeModal() {
+            document.getElementById('investModal').classList.remove('active');
+        }
+
+        function renderPortfolio() {
+            const portfolio = DB.getPortfolio(APP.user.id);
+            if (!portfolio.length) return '<h1 class="section-title">Sin inversiones aún</h1>';
+            return `<div><h1 class="section-title">Mi Portafolio</h1>${portfolio.map(p => { const asset = [...MARKETS.crypto, ...MARKETS.stocks].find(a => a.id === p.symbol); const price = getPrice(asset); const gainPct = ((price - p.buyPrice) / p.buyPrice * 100).toFixed(2); const history = getPriceHistory(asset); return `<div class="card" style="margin-bottom: 24px;"><div style="display: flex; justify-content: space-between; margin-bottom: 20px;"><div><div class="section-title" style="margin: 0;">${asset.name}</div><div class="section-subtitle">${p.amount} unidades @ $${p.buyPrice.toFixed(2)}</div></div><div style="text-align: right;"><div class="stat-value">$${(p.amount * price).toFixed(2)}</div><div class="stat-value ${gainPct >= 0 ? 'positive' : 'negative'}" style="font-size: 14px; margin-top: 8px;">${gainPct >= 0 ? '+' : ''}${gainPct}%</div></div></div><div id="chart-${p.symbol}" class="chart-container"></div></div>`;}).join('')}</div>`;
+        }
+
+        function renderCasino() {
+            return `<div><h1 class="section-title">Casino</h1><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;"><div class="card"><div style="font-size: 48px; margin-bottom: 16px;">🎡</div><div style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Ruleta</div><div class="section-subtitle">Probabilidad: 48.6%</div><button class="button button-primary" onclick="openRoulette()" style="width: 100%; margin-top: 16px;">Jugar Ruleta</button></div><div class="card"><div style="font-size: 48px; margin-bottom: 16px;">🃏</div><div style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Blackjack</div><div class="section-subtitle">Vence al crupier</div><button class="button button-primary" onclick="openBlackjack()" style="width: 100%; margin-top: 16px;">Jugar Blackjack</button></div></div></div>`;
+        }
+
+        function openRoulette() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `<div class="modal-content" style="max-width: 600px;"><h2 class="section-title">Ruleta</h2><div style="text-align: center; margin: 24px 0;"><canvas id="rouletteCanvas" width="350" height="350"></canvas></div><div class="form-group"><label class="form-label">Cantidad a apostar</label><input type="number" id="betAmount" class="form-input" max="${APP.user.balance}"></div><button class="button button-primary" onclick="playRoulette(this.parentElement)" style="width: 100%;">Girar</button></div>`;
+            document.body.appendChild(modal);
+            setTimeout(() => drawRoulette(document.getElementById('rouletteCanvas')), 100);
+        }
+
+        function drawRoulette(canvas) {
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const cx = 175, cy = 175, r = 140;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 37; i++) {
+                const angle = (i * 360 / 37) * Math.PI / 180;
+                const nextAngle = ((i + 1) * 360 / 37) * Math.PI / 180;
+                ctx.fillStyle = i % 2 === 0 ? '#EA580C' : '#2D3B52';
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, r, angle, nextAngle);
+                ctx.closePath();
+                ctx.fill();
+            }
+            ctx.strokeStyle = '#2D3B52';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(cx, cy - r + 15, 12, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function playRoulette(container) {
+            const bet = parseFloat(container.querySelector('#betAmount')?.value || 0);
+            if (bet <= 0 || bet > APP.user.balance) return alert('Apuesta inválida');
+            APP.user.balance -= bet;
+            const won = Math.random() > 0.514;
+            if (won) { APP.user.balance += bet * 2; APP.user.totalWon += bet; alert('¡GANASTE! +$' + (bet * 2).toFixed(2)); }
+            else { APP.user.totalLost += bet; alert('Perdiste -$' + bet.toFixed(2)); }
+            DB.setUser(APP.user);
+            container.closest('.modal').remove();
+            render();
+        }
+
+        function openBlackjack() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `<div class="modal-content"><h2 class="section-title">Blackjack</h2><div style="background: rgba(22, 163, 74, 0.1); border: 2px solid #16A34A; border-radius: 12px; padding: 24px;"><div style="text-align: center; margin-bottom: 20px;"><div class="section-subtitle">CRUPIER</div><div class="cards-display" id="dealerCards"></div></div><div style="text-align: center;"><div class="section-subtitle">TU MANO</div><div class="cards-display" id="playerCards"></div></div></div><div class="form-group" style="margin-top: 24px;"><label class="form-label">Cantidad a apostar</label><input type="number" id="bjBet" class="form-input" max="${APP.user.balance}"></div><button class="button button-primary" onclick="playBlackjack(this.parentElement)" style="width: 100%;">Jugar</button>`;
+            document.body.appendChild(modal);
+        }
+
+        function playBlackjack(container) {
+            const bet = parseFloat(container.querySelector('#bjBet')?.value || 0);
+            if (bet <= 0 || bet > APP.user.balance) return alert('Apuesta inválida');
+
+            const getCard = () => {
+                const suits = ['♠', '♥', '♦', '♣'];
+                const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+                return values[Math.floor(Math.random() * 13)] + suits[Math.floor(Math.random() * 4)];
+            };
+
+            const getVal = (card) => {
+                const v = card[0];
+                if (v === 'A') return 11;
+                if (['J', 'Q', 'K'].includes(v)) return 10;
+                return parseInt(v);
+            };
+
+            const p1 = getCard(), p2 = getCard(), d1 = getCard(), d2 = getCard();
+            document.getElementById('playerCards').innerHTML = `<div class="playing-card ${['♥', '♦'].includes(p1[1]) ? 'red' : 'black'}">${p1}</div><div class="playing-card ${['♥', '♦'].includes(p2[1]) ? 'red' : 'black'}">${p2}</div>`;
+            document.getElementById('dealerCards').innerHTML = `<div class="playing-card ${['♥', '♦'].includes(d1[1]) ? 'red' : 'black'}">${d1}</div>`;
+
+            const pv = getVal(p1) + getVal(p2), dv = getVal(d1) + getVal(d2);
+
+            setTimeout(() => {
+                document.getElementById('dealerCards').innerHTML = `<div class="playing-card ${['♥', '♦'].includes(d1[1]) ? 'red' : 'black'}">${d1}</div><div class="playing-card ${['♥', '♦'].includes(d2[1]) ? 'red' : 'black'}">${d2}</div>`;
+
+                let result = '';
+                if (pv > 21) {
+                    result = 'Bust! Perdiste $' + bet;
+                    APP.user.totalLost += bet;
+                    APP.user.balance -= bet;
+                } else if (dv > 21) {
+                    result = '¡Ganaste! +$' + (bet * 2);
+                    APP.user.balance += bet * 2;
+                    APP.user.totalWon += bet;
+                } else if (pv > dv) {
+                    result = '¡Ganaste! +$' + (bet * 2);
+                    APP.user.balance += bet * 2;
+                    APP.user.totalWon += bet;
+                } else if (dv > pv) {
+                    result = 'Perdiste $' + bet;
+                    APP.user.totalLost += bet;
+                    APP.user.balance -= bet;
+                } else {
+                    result = 'Empate';
+                }
+
+                DB.setUser(APP.user);
+                alert(result);
+                container.closest('.modal').remove();
+                render();
+            }, 600);
+        }
+
+        function renderGroups() {
+            const groups = DB.getGroups();
+            return `<div><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;"><h1 class="section-title" style="margin: 0;">Mis Grupos</h1><button class="button button-primary" onclick="createGroup();">Crear Grupo</button></div>${groups.length === 0 ? '<div class="section-subtitle">Sin grupos aún</div>' : groups.map(g => `<div class="card" style="margin-bottom: 20px;"><h2 class="section-title" style="margin-bottom: 16px;">${g.name}</h2><table class="table"><thead><tr><th>Posición</th><th>Nombre</th><th>Saldo</th></tr></thead><tbody>${g.members.sort((a, b) => b.balance - a.balance).map((m, i) => `<tr><td>#${i + 1}</td><td>${m.name}</td><td>$${m.balance.toLocaleString('en', {maximumFractionDigits: 0})}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div>`;
+        }
+
+        function createGroup() {
+            const name = prompt('Nombre del grupo:');
+            if (!name) return;
+            const groups = DB.getGroups();
+            groups.push({ id: Date.now(), name, creator: APP.user.name, members: [{ name: APP.user.name, balance: APP.user.balance }] });
+            DB.setGroups(groups);
+            APP.groups = groups;
+            render();
+        }
+
         function render() {
-            renderNavbar();
             const content = document.getElementById('content');
-            if (!STATE.user) {
-                content.innerHTML = renderLogin();
-                return;
+            if (!APP.user) { content.innerHTML = renderLogin(); return; }
+            renderNavbar();
+            let html = '';
+            switch (APP.page) {
+                case 'dashboard': html = renderDashboard(); break;
+                case 'markets': html = renderMarkets(); break;
+                case 'portfolio': html = renderPortfolio(); break;
+                case 'casino': html = renderCasino(); break;
+                case 'groups': html = renderGroups(); break;
+                default: html = renderDashboard();
             }
-            switch (STATE.page) {
-                case 'dashboard': content.innerHTML = renderDashboard(); break;
-                case 'markets': content.innerHTML = renderMarkets(); break;
-                case 'portfolio': content.innerHTML = renderPortfolio(); break;
-                case 'casino': content.innerHTML = renderCasino(); break;
-                case 'leagues': content.innerHTML = renderLeagues(); break;
-                case 'analytics': content.innerHTML = renderAnalytics(); break;
-                case 'education': content.innerHTML = renderEducation(); break;
-                default: content.innerHTML = renderDashboard();
+            content.innerHTML = html;
+
+            if (APP.page === 'portfolio') {
+                setTimeout(() => {
+                    const portfolio = DB.getPortfolio(APP.user.id);
+                    portfolio.forEach(p => {
+                        const asset = [...MARKETS.crypto, ...MARKETS.stocks].find(a => a.id === p.symbol);
+                        const container = document.getElementById(`chart-${p.symbol}`);
+                        if (container && window.LightweightCharts) {
+                            const chart = LightweightCharts.createChart(container, { width: container.clientWidth, height: 350, layout: { background: { color: '#1A1F35' }, textColor: '#94A3B8' }, timeScale: { timeVisible: true } });
+                            const series = chart.addLineSeries({ color: '#0F3460', lineWidth: 2 });
+                            series.setData(getPriceHistory(asset));
+                            chart.timeScale().fitContent();
+                        }
+                    });
+                }, 100);
             }
         }
 
-        STATE.user = DB.getUser();
-        if (STATE.user) STATE.portfolio = DB.getPortfolio(STATE.user.id);
+        APP.user = DB.getUser();
+        if (APP.user) { APP.portfolio = DB.getPortfolio(APP.user.id); APP.groups = DB.getGroups(); }
         render();
     </script>
 </body>
